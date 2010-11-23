@@ -1,0 +1,5 @@
+struct target_position_message_t
+{
+    double x;
+    double y;
+}

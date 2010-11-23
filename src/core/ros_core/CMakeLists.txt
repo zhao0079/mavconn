@@ -1,0 +1,7 @@
+IF (ROS_FOUND)
+# ADD_SUBDIRECTORY(PACKAGE_NAME)
+
+INCLUDE_DIRECTORIES(~/ros/ros/core/roscpp/include)
+
+ENDIF ()
+

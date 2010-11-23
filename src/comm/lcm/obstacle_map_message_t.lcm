@@ -1,0 +1,5 @@
+struct obstacle_map_message_t
+{
+    int64_t length;
+    int8_t data[length];
+}

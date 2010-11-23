@@ -1,0 +1,2 @@
+ADD_SUBDIRECTORY(camera)
+ADD_SUBDIRECTORY(shared_mem)

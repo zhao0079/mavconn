@@ -1,0 +1,74 @@
+/*
+ *   ORXONOX - the hottest 3D action shooter ever to exist
+ *                    > www.orxonox.net <
+ *
+ *
+ *   License notice:
+ *
+ *   This program is free software; you can redistribute it and/or
+ *   modify it under the terms of the GNU General Public License
+ *   as published by the Free Software Foundation; either version 2
+ *   of the License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ *   Author:
+ *      Reto Grieder
+ *   Co-authors:
+ *      ...
+ *
+ */
+
+// 5/9/2009: Adapted to the MAVCONN Project by Fabian Landau
+
+/**
+ @file
+ @brief
+    Various constants and options that only affect very little code.
+ @note
+    @GENERATED_FILE_COMMENT@
+ */
+
+#ifndef _MAVCONNPathConfig_H__
+#define _MAVCONNPathConfig_H__
+
+#include "MAVCONNConfig.h"
+
+/* MAVCONN either gets installed to the system or just into a folder.
+   The latter uses relative paths. */
+#cmakedefine INSTALL_COPYABLE
+
+/* Using MSVC or XCode IDE */
+#cmakedefine CMAKE_CONFIGURATION_TYPES
+
+/* Handle default ConfigValues */
+namespace MAVCONN
+{
+    const char* const MAVCONN_RUNTIME_INSTALL_PATH ("@MAVCONN_RUNTIME_INSTALL_PATH@");
+    const char* const MAVCONN_MEDIA_INSTALL_PATH   ("@MAVCONN_MEDIA_INSTALL_PATH@");
+    /* Config and Log path might be relative because they could be user and therefore runtime dependent */
+    const char* const MAVCONN_CONFIG_INSTALL_PATH  ("@MAVCONN_CONFIG_INSTALL_PATH@");
+    const char* const MAVCONN_LOG_INSTALL_PATH     ("@MAVCONN_LOG_INSTALL_PATH@");
+    const char* const MAVCONN_CAPTURE_INSTALL_PATH ("@MAVCONN_CAPTURE_INSTALL_PATH@");
+
+#ifdef CMAKE_CONFIGURATION_TYPES
+    const char* const MAVCONN_MEDIA_DEV_PATH      ("@CMAKE_MEDIA_OUTPUT_DIRECTORY@/"  MACRO_QUOTEME(CMAKE_BUILD_TYPE));
+    const char* const MAVCONN_CONFIG_DEV_PATH     ("@CMAKE_CONFIG_OUTPUT_DIRECTORY@/" MACRO_QUOTEME(CMAKE_BUILD_TYPE));
+    const char* const MAVCONN_LOG_DEV_PATH        ("@CMAKE_LOG_OUTPUT_DIRECTORY@/"    MACRO_QUOTEME(CMAKE_BUILD_TYPE));
+    const char* const MAVCONN_CAPTURE_DEV_PATH    ("@CMAKE_CAPTURE_OUTPUT_DIRECTORY@/"MACRO_QUOTEME(CMAKE_BUILD_TYPE));
+#else
+    const char* const MAVCONN_MEDIA_DEV_PATH      ("@CMAKE_MEDIA_OUTPUT_DIRECTORY@");
+    const char* const MAVCONN_CONFIG_DEV_PATH     ("@CMAKE_CONFIG_OUTPUT_DIRECTORY@");
+    const char* const MAVCONN_LOG_DEV_PATH        ("@CMAKE_LOG_OUTPUT_DIRECTORY@");
+    const char* const MAVCONN_CAPTURE_DEV_PATH    ("@CMAKE_CAPTURE_OUTPUT_DIRECTORY@");
+#endif
+}
+
+#endif /* _MAVCONNPathConfig_H__ */

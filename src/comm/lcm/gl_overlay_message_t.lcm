@@ -1,0 +1,10 @@
+struct gl_overlay_message_t
+{
+    string name;
+    int8_t coordinate_frame_type;
+    double origin_x;
+    double origin_y;
+    double origin_z;
+    int64_t length;
+    int8_t data[length];
+}

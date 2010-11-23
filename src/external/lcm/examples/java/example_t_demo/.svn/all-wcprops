@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/369/trunk/examples/java/example_t_demo
+END
+Listener.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/369/trunk/examples/java/example_t_demo/Listener.java
+END
+build.sh
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/317/trunk/examples/java/example_t_demo/build.sh
+END
+clean.sh
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/317/trunk/examples/java/example_t_demo/clean.sh
+END
+SendMessage.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/285/trunk/examples/java/example_t_demo/SendMessage.java
+END

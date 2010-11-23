@@ -1,0 +1,16 @@
+<package>
+  <description brief="rviz_example">
+
+     rviz_example
+
+  </description>
+  <author>pixhawk</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rviz_example</url>
+  <depend package="roscpp"/>
+  <depend package="visualization_msgs"/>
+
+</package>
+
+

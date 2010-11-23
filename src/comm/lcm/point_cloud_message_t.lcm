@@ -1,0 +1,7 @@
+struct point_cloud_message_t
+{    
+    int64_t count;
+    float x[count];
+    float y[count];
+    float z[count];
+}

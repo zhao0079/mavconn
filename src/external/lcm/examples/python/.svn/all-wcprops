@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/372/trunk/examples/python
+END
+cleanup.sh
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/372/trunk/examples/python/cleanup.sh
+END
+read-log.py
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/372/trunk/examples/python/read-log.py
+END
+send-message.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/317/trunk/examples/python/send-message.py
+END
+gen-types.sh
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/372/trunk/examples/python/gen-types.sh
+END
+listener.py
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/372/trunk/examples/python/listener.py
+END

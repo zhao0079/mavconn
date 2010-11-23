@@ -1,0 +1,4 @@
+#!/bin/sh
+# convenience script for starting pixhawk on Linux
+
+exec @CURRENT_RUNTIME_DIR@/ferns $@
