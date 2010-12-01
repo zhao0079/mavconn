@@ -1,2 +1,0 @@
-ADD_SUBDIRECTORY(lcm)
-ADD_SUBDIRECTORY(lcm-logger)

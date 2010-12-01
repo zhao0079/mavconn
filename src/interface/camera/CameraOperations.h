@@ -1,7 +1,7 @@
 /*======================================================================
 
-PIXHAWK mcvlib - The Micro Computer Vision Library
-Please see our website at <http://pixhawk.ethz.ch>
+MAVCONN mcvlib - The Micro Computer Vision Library
+Please see our website at <http://MAVCONN.ethz.ch>
 
 Original Authors:
   Fabian Landau
@@ -9,9 +9,9 @@ Contributing Authors (in alphabetical order):
 
 Todo:
 
-(c) 2009 PIXHAWK PROJECT  <http://pixhawk.ethz.ch>
+(c) 2009 MAVCONN PROJECT  <http://MAVCONN.ethz.ch>
 
-This file is part of the PIXHAWK project
+This file is part of the MAVCONN project
 
     mcvlib is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,17 +32,17 @@ This file is part of the PIXHAWK project
 #define _CameraOperations_H__
 
 #define RegisterInputOperation(classname) \
-    pixhawk::CameraOperationFactory* __##classname##_camop = &pixhawk::Camera::declareInputOperation(new pixhawk::TCameraOperationFactory<classname>())
+    MAVCONN::CameraOperationFactory* __##classname##_camop = &MAVCONN::Camera::declareInputOperation(new MAVCONN::TCameraOperationFactory<classname>())
 
 #define RegisterOutputOperation(classname) \
-    pixhawk::CameraOperationFactory* __##classname##_camop = &pixhawk::Camera::declareOutputOperation(new pixhawk::TCameraOperationFactory<classname>())
+    MAVCONN::CameraOperationFactory* __##classname##_camop = &MAVCONN::Camera::declareOutputOperation(new MAVCONN::TCameraOperationFactory<classname>())
 
 #include <string>
 #include <sstream>
 #include <typeinfo>
 #include "Camera.h"
 
-namespace pixhawk
+namespace MAVCONN
 {
     class Camera;
 
@@ -194,7 +194,7 @@ namespace pixhawk
             }
 
             inline std::string getTypeDescription() const
-                { return pixhawk::getTypeDescription<typename TypeStripper<P>::RawType>(); }
+                { return MAVCONN::getTypeDescription<typename TypeStripper<P>::RawType>(); }
 
             inline std::string getDefaultValue() const
                 { return convertValueToString(this->defaultValue_); }

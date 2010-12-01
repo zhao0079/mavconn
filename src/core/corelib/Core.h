@@ -27,7 +27,7 @@
  *
  */
 
-// 5/10/2009: Adapted to the Pixhawk Project by Fabian Landau
+// 5/10/2009: Adapted to the MAVCONN Project by Fabian Landau
 
 /**
     @file
@@ -57,7 +57,7 @@ namespace boost
     }
 }
 
-namespace pixhawk
+namespace MAVCONN
 {
     class SignalHandler; // forward declaration
 

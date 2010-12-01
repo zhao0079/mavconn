@@ -1,30 +1,30 @@
 /*=====================================================================
 
-PIXHAWK Micro Air Vehicle Flying Robotics Toolkit
-Please see our website at <http://pixhawk.ethz.ch>
+MAVCONN Micro Air Vehicle Flying Robotics Toolkit
+Please see our website at <http://MAVCONN.ethz.ch>
 
-(c) 2009 PIXHAWK PROJECT  <http://pixhawk.ethz.ch>
+(c) 2009 MAVCONN PROJECT  <http://MAVCONN.ethz.ch>
 
-This file is part of the PIXHAWK project
+This file is part of the MAVCONN project
 
-    PIXHAWK is free software: you can redistribute it and/or modify
+    MAVCONN is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    PIXHAWK is distributed in the hope that it will be useful,
+    MAVCONN is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with PIXHAWK. If not, see <http://www.gnu.org/licenses/>.
+    along with MAVCONN. If not, see <http://www.gnu.org/licenses/>.
 
 ======================================================================*/
 
 /**
  * @file
- *   @brief Definition of the class PxExample.
+ *   @brief MAVCONN Lightweight Robotics Middleware main header
  *
  *   @author Lorenz Meier <mavteam@student.ethz.ch>
  *
@@ -34,14 +34,16 @@ This file is part of the PIXHAWK project
 /*@{*/
 
 
-#ifndef _PX_H_
-#define _PX_H_
+#ifndef _MAVCONN_H_
+#define _MAVCONN_H_
+
+#include <cmath>
 
 // MAVLINK message format includes
-#include "mavlink.h"
+#include <mavlink.h>
 
 // OpenCV types
-#include "cxtypes.h"
+#include <cxtypes.h>
 
 // LCM transport includes
 #include <lcm/lcm.h>
@@ -52,13 +54,13 @@ This file is part of the PIXHAWK project
 #include <time.h>
 
 // Parameter client
-#include <PxParamClient.h>
+#include "core/PxParamClient.h"
 
 // ROS support
 #define PX_ROS_ENABLED	0
 
 
-enum PIXHAWK_COMPONENT_IDS
+enum MAVCONN_COMPONENT_IDS
 {
 	PX_COMP_ID_CORE = 100,
 	PX_COMP_ID_PING = 101,
@@ -113,8 +115,6 @@ struct CamImage_t
 	Camera_t cam;   ///< ID of the capturing camera
 	IplImage img;   ///< The image container, as IPLImage
 };
-
-#include <math.h>
 
 #ifndef isnan
 # define isnan(x) \

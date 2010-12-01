@@ -16,24 +16,24 @@ ENDIF(GPS_FOUND)
 
 PIXHAWK_EXECUTABLE(px_ping px_ping.cc)
 PIXHAWK_LINK_LIBRARIES(px_ping
-  lcmext
+  mavconn_lcm
 )
 
 PIXHAWK_EXECUTABLE(px_mavlink_bridge_serial px_mavlinkserial.cc)
 PIXHAWK_LINK_LIBRARIES(px_mavlink_bridge_serial
-  lcmext
+  mavconn_lcm
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 PIXHAWK_EXECUTABLE(px_mavlink_bridge_udp px_udplink.cc)
 PIXHAWK_LINK_LIBRARIES(px_mavlink_bridge_udp
-  lcmext
+  mavconn_lcm
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 PIXHAWK_EXECUTABLE_CONDITIONAL(px_gpsd CONDITION GPS_FOUND FILES px_gpsd.cc)
 PIXHAWK_LINK_LIBRARIES(px_gpsd
-  lcmext
+  mavconn_lcm
   ${GPS_LIBRARY}
   ${GPS_LIBRARY_OPTIMIZED}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -46,7 +46,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
     
       PIXHAWK_EXECUTABLE(px_vicon_bridge px_vicon_bridge.cc PxVicon.cc)
       PIXHAWK_LINK_LIBRARIES(px_vicon_bridge
-        lcmext transform ViconDataStreamSDK_CPP
+        mavconn_lcm transform ViconDataStreamSDK_CPP
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
       )
         

@@ -39,20 +39,20 @@ set(EXECUTABLE_OUTPUT_PATH ~/pixhawk/embedded/eclipsebuild/bin)
 
 rosbuild_add_executable(px_rviz src/px_rviz.cc)
 TARGET_LINK_LIBRARIES(px_rviz
-  lcmext
+  mavconn_lcm
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${Boost_THREAD_LIBRARY}
 )
 
 rosbuild_add_executable(px_house src/px_house.cc)
 TARGET_LINK_LIBRARIES(px_house
-  lcmext
+  mavconn_lcm
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 ADD_EXECUTABLE(wp_test_send src/wp_test_send.cc)
 TARGET_LINK_LIBRARIES(wp_test_send
-  lcmext
+  mavconn_lcm
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 

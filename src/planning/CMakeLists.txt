@@ -7,7 +7,7 @@ INCLUDE_DIRECTORIES(
 #PIXHAWK_EXECUTABLE(px_waypointplanner px_waypointplanner.cc)
 #PIXHAWK_LINK_LIBRARIES(px_waypointplanner
 #  ${CXCORE_LIBRARY}
-#  lcmext
+#  mavconn_lcm
 #  corelib
 #${Boost_PROGRAM_OPTIONS_LIBRARY}
 #)

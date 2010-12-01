@@ -69,6 +69,11 @@ MACRO(GET_ALL_HEADER_FILES _target_varname)
   FILE(GLOB_RECURSE ${_target_varname} ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
 ENDMACRO(GET_ALL_HEADER_FILES)
 
+# Search the entire directory tree for header files and add them to a variable
+MACRO(GET_ALL_HEADER_FILES_FOR_DIR _source_dir_sub_path _target_varname)
+  FILE(GLOB_RECURSE ${_target_varname} ${_source_dir_sub_path} "*.h")
+ENDMACRO(GET_ALL_HEADER_FILES)
+
 
 # Generate source groups according to the directory structure
 FUNCTION(GENERATE_SOURCE_GROUPS)

@@ -1,7 +1,7 @@
 /*======================================================================
 
-PIXHAWK mcvlib - The Micro Computer Vision Library
-Please see our website at <http://pixhawk.ethz.ch>
+MAVCONN mcvlib - The Micro Computer Vision Library
+Please see our website at <http://MAVCONN.ethz.ch>
 
 Original Authors:
   @author Fabian Landau
@@ -9,9 +9,9 @@ Contributing Authors (in alphabetical order):
 
 Todo:
 
-(c) 2009 PIXHAWK PROJECT  <http://pixhawk.ethz.ch>
+(c) 2009 MAVCONN PROJECT  <http://MAVCONN.ethz.ch>
 
-This file is part of the PIXHAWK project
+This file is part of the MAVCONN project
 
     mcvlib is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ This file is part of the PIXHAWK project
 
 typedef struct _lcm_t lcm_t;
 
-namespace pixhawk
+namespace MAVCONN
 {
     class LcmInput : public InputOperation
     {

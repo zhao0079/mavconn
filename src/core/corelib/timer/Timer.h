@@ -3,7 +3,7 @@
 
 #include "OgreTimer.h"
 
-namespace pixhawk
+namespace MAVCONN
 {
     typedef Ogre::Timer Timer;
 }

@@ -26,7 +26,7 @@
  *
  */
 
-// 5/10/2009: Adapted to the Pixhawk Project by Fabian Landau
+// 5/10/2009: Adapted to the MAVCONN Project by Fabian Landau
 
 /**
 @file
@@ -44,7 +44,7 @@
 #include <cassert>
 #include "Debug.h"
 
-namespace pixhawk
+namespace MAVCONN
 {
     class Exception : public std::exception
     {
@@ -76,7 +76,7 @@ namespace pixhawk
     };
 
 
-#define CREATE_PIXHAWK_EXCEPTION(ExceptionName)                                     \
+#define CREATE_MAVCONN_EXCEPTION(ExceptionName)                                     \
     class ExceptionName##Exception : public Exception                               \
     {                                                                               \
     public:                                                                         \
@@ -96,13 +96,13 @@ namespace pixhawk
 
     // Creates all possible exception types.
     // If you want to add a new type, simply copy and adjust a new line here.
-    CREATE_PIXHAWK_EXCEPTION(General);
-    CREATE_PIXHAWK_EXCEPTION(FileNotFound);
-    CREATE_PIXHAWK_EXCEPTION(Argument);
-    CREATE_PIXHAWK_EXCEPTION(ParseError);
-    CREATE_PIXHAWK_EXCEPTION(PluginsNotFound);
-    CREATE_PIXHAWK_EXCEPTION(InitialisationFailed);
-    CREATE_PIXHAWK_EXCEPTION(NotImplemented);
+    CREATE_MAVCONN_EXCEPTION(General);
+    CREATE_MAVCONN_EXCEPTION(FileNotFound);
+    CREATE_MAVCONN_EXCEPTION(Argument);
+    CREATE_MAVCONN_EXCEPTION(ParseError);
+    CREATE_MAVCONN_EXCEPTION(PluginsNotFound);
+    CREATE_MAVCONN_EXCEPTION(InitialisationFailed);
+    CREATE_MAVCONN_EXCEPTION(NotImplemented);
 
     /**
     @brief
@@ -118,13 +118,13 @@ namespace pixhawk
 }
 
 #define ThrowException(type, description) \
-    throw pixhawk::InternalHandleException(type##Exception(description, __LINE__, __FILE__, __FUNCTIONNAME__))
+    throw MAVCONN::InternalHandleException(type##Exception(description, __LINE__, __FILE__, __FUNCTIONNAME__))
 
 /*
 // define an assert macro that can display a message
 #ifndef NDEBUG
 #define OrxAssert(Assertion, ErrorMessage) \
-    Assertion ? ((void)0) : (void)(pixhawk::OutputHandler::getOutStream().setOutputLevel(ORX_ERROR) << ErrorMessage << std::endl); \
+    Assertion ? ((void)0) : (void)(MAVCONN::OutputHandler::getOutStream().setOutputLevel(ORX_ERROR) << ErrorMessage << std::endl); \
     assert(Assertion)
 #else
 #define OrxAssert(condition, errorMessage)  ((void)0)

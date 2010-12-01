@@ -1,31 +1,31 @@
 /*=====================================================================
 
-PIXHAWK Micro Air Vehicle Flying Robotics Toolkit
-Please see our website at <http://pixhawk.ethz.ch>
+MAVCONN Micro Air Vehicle Flying Robotics Toolkit
+Please see our website at <http://MAVCONN.ethz.ch>
 
-(c) 2009, 2010 PIXHAWK PROJECT
+(c) 2009, 2010 MAVCONN PROJECT
 
-This file is part of the PIXHAWK project
+This file is part of the MAVCONN project
 
-    PIXHAWK is free software: you can redistribute it and/or modify
+    MAVCONN is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    PIXHAWK is distributed in the hope that it will be useful,
+    MAVCONN is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with PIXHAWK. If not, see <http://www.gnu.org/licenses/>.
+    along with MAVCONN. If not, see <http://www.gnu.org/licenses/>.
 
 ======================================================================*/
 
 
 /**
  * @file
- *   @brief ROS Visualization of PixHawk, Waypoints, etc.
+ *   @brief ROS Visualization of MAVCONN, Waypoints, etc.
  *
  *   @author Bastian Buecheler <mavteam@student.ethz.ch>
  *   @author Christian Schluchter <schluchc@ee.ethz.ch>
@@ -44,7 +44,7 @@ This file is part of the PIXHAWK project
 #include "glib.h"
 
 
-// Pixhawk includes
+// MAVCONN includes
 #include "mavconn.h"
 #include <lcm/lcm.h>
 #include "comm/lcm/mavlink_message_t.h"
@@ -180,7 +180,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			}
 			world_nav_body_rot = tf::createQuaternionFromRPY(att.roll, att.pitch, att.yaw);
 			transform_nav_body.setRotation(world_nav_body_rot);
-			br.sendTransform(tf::StampedTransform(transform_nav_body, ros::Time::now(), "navi_frame", "pixhawk"));
+			br.sendTransform(tf::StampedTransform(transform_nav_body, ros::Time::now(), "navi_frame", "MAVCONN"));
 
 			px_marker_c.header.stamp = ros::Time::now();
 			px_marker_f.header.stamp = ros::Time::now();
@@ -189,12 +189,12 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			px_marker_r.header.stamp = ros::Time::now();
 			px_marker_cam.header.stamp = ros::Time::now();
 
-			px_marker_c.header.frame_id = "/pixhawk";
-			px_marker_f.header.frame_id = "/pixhawk";
-			px_marker_b.header.frame_id = "/pixhawk";
-			px_marker_l.header.frame_id = "/pixhawk";
-			px_marker_r.header.frame_id = "/pixhawk";
-			px_marker_cam.header.frame_id = "/pixhawk";
+			px_marker_c.header.frame_id = "/MAVCONN";
+			px_marker_f.header.frame_id = "/MAVCONN";
+			px_marker_b.header.frame_id = "/MAVCONN";
+			px_marker_l.header.frame_id = "/MAVCONN";
+			px_marker_r.header.frame_id = "/MAVCONN";
+			px_marker_cam.header.frame_id = "/MAVCONN";
 
 			marker_pub.publish(px_marker_c);
 			marker_pub.publish(px_marker_f);
@@ -219,7 +219,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			transform_nav_body.setOrigin(tf::Vector3(pos.x, pos.y, pos.z));
 			// world_nav_body_rot = tf::createQuaternionFromRPY(pos.roll, pos.pitch, pos.yaw);
 			transform_nav_body.setRotation(world_nav_body_rot);
-			br.sendTransform(tf::StampedTransform(transform_nav_body, ros::Time::now(), "navi_frame", "pixhawk"));
+			br.sendTransform(tf::StampedTransform(transform_nav_body, ros::Time::now(), "navi_frame", "MAVCONN"));
 
 			px_marker_c.header.stamp = ros::Time::now();
 			px_marker_f.header.stamp = ros::Time::now();
@@ -228,12 +228,12 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			px_marker_r.header.stamp = ros::Time::now();
 			px_marker_cam.header.stamp = ros::Time::now();
 
-			px_marker_c.header.frame_id = "/pixhawk";
-			px_marker_f.header.frame_id = "/pixhawk";
-			px_marker_b.header.frame_id = "/pixhawk";
-			px_marker_l.header.frame_id = "/pixhawk";
-			px_marker_r.header.frame_id = "/pixhawk";
-			px_marker_cam.header.frame_id = "/pixhawk";
+			px_marker_c.header.frame_id = "/MAVCONN";
+			px_marker_f.header.frame_id = "/MAVCONN";
+			px_marker_b.header.frame_id = "/MAVCONN";
+			px_marker_l.header.frame_id = "/MAVCONN";
+			px_marker_r.header.frame_id = "/MAVCONN";
+			px_marker_cam.header.frame_id = "/MAVCONN";
 
 			marker_pub.publish(px_marker_c);
 			marker_pub.publish(px_marker_f);
@@ -250,7 +250,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			transform_nav_body_mult.setOrigin(tf::Vector3(pos_mult.x, pos_mult.y, pos_mult.z));
 			world_nav_body_mult_rot = tf::createQuaternionFromRPY(pos_mult.roll, pos_mult.pitch, pos_mult.yaw);
 			transform_nav_body_mult.setRotation(world_nav_body_mult_rot);
-			br.sendTransform(tf::StampedTransform(transform_nav_body_mult, ros::Time::now(), "navi_frame", "pixhawk_mult"));
+			br.sendTransform(tf::StampedTransform(transform_nav_body_mult, ros::Time::now(), "navi_frame", "MAVCONN_mult"));
 
 			if (verbose) {
 				printf("Received multitracker vision estimate message: \n");
@@ -269,12 +269,12 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			px_mult_marker_r.header.stamp = ros::Time::now();
 			px_mult_marker_cam.header.stamp = ros::Time::now();
 
-			px_mult_marker_c.header.frame_id = "/pixhawk_mult";
-			px_mult_marker_f.header.frame_id = "/pixhawk_mult";
-			px_mult_marker_b.header.frame_id = "/pixhawk_mult";
-			px_mult_marker_l.header.frame_id = "/pixhawk_mult";
-			px_mult_marker_r.header.frame_id = "/pixhawk_mult";
-			px_mult_marker_cam.header.frame_id = "/pixhawk_mult";
+			px_mult_marker_c.header.frame_id = "/MAVCONN_mult";
+			px_mult_marker_f.header.frame_id = "/MAVCONN_mult";
+			px_mult_marker_b.header.frame_id = "/MAVCONN_mult";
+			px_mult_marker_l.header.frame_id = "/MAVCONN_mult";
+			px_mult_marker_r.header.frame_id = "/MAVCONN_mult";
+			px_mult_marker_cam.header.frame_id = "/MAVCONN_mult";
 
 			marker_pub.publish(px_mult_marker_c);
 			marker_pub.publish(px_mult_marker_f);
@@ -289,7 +289,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			transform_nav_body_est.setOrigin(tf::Vector3(pos_est.x, pos_est.y, pos_est.z));
 			world_nav_body_est_rot = tf::createQuaternionFromRPY(pos_est.roll, pos_est.pitch, pos_est.yaw);
 			transform_nav_body_est.setRotation(world_nav_body_est_rot);
-			br.sendTransform(tf::StampedTransform(transform_nav_body_est, ros::Time::now(), "navi_frame", "pixhawk_est"));
+			br.sendTransform(tf::StampedTransform(transform_nav_body_est, ros::Time::now(), "navi_frame", "MAVCONN_est"));
 
 			if (verbose) {
 				printf("Received tracker vision estimate message: \n");
@@ -308,12 +308,12 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 			px_est_marker_r.header.stamp = ros::Time::now();
 			px_est_marker_cam.header.stamp = ros::Time::now();
 
-			px_est_marker_c.header.frame_id = "/pixhawk_est";
-			px_est_marker_f.header.frame_id = "/pixhawk_est";
-			px_est_marker_b.header.frame_id = "/pixhawk_est";
-			px_est_marker_l.header.frame_id = "/pixhawk_est";
-			px_est_marker_r.header.frame_id = "/pixhawk_est";
-			px_est_marker_cam.header.frame_id = "/pixhawk_est";
+			px_est_marker_c.header.frame_id = "/MAVCONN_est";
+			px_est_marker_f.header.frame_id = "/MAVCONN_est";
+			px_est_marker_b.header.frame_id = "/MAVCONN_est";
+			px_est_marker_l.header.frame_id = "/MAVCONN_est";
+			px_est_marker_r.header.frame_id = "/MAVCONN_est";
+			px_est_marker_cam.header.frame_id = "/MAVCONN_est";
 
 			marker_pub.publish(px_est_marker_c);
 			marker_pub.publish(px_est_marker_f);

@@ -27,7 +27,7 @@
  *
  */
 
-// 5/10/2009: Adapted to the Pixhawk Project by Fabian Landau
+// 5/10/2009: Adapted to the MAVCONN Project by Fabian Landau
 
 /**
     @file
@@ -42,7 +42,7 @@
 #include <cstdio>
 #include <boost/filesystem.hpp>
 
-#ifdef PIXHAWK_PLATFORM_WINDOWS
+#ifdef MAVCONN_PLATFORM_WINDOWS
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN
 #  endif
@@ -60,7 +60,7 @@
 #include "Exception.h"
 #include "SignalHandler.h"
 
-namespace pixhawk
+namespace MAVCONN
 {
     //! Path to the parent directory of the ones above if program was installed with relativ pahts
     static boost::filesystem::path rootPath_g;
@@ -215,13 +215,13 @@ namespace pixhawk
     */
     void Core::setExecutablePath()
     {
-#ifdef PIXHAWK_PLATFORM_WINDOWS
+#ifdef MAVCONN_PLATFORM_WINDOWS
         // get executable module
         TCHAR buffer[1024];
         if (GetModuleFileName(NULL, buffer, 1024) == 0)
             ThrowException(General, "Could not retrieve executable path.");
 
-#elif defined(PIXHAWK_PLATFORM_APPLE)
+#elif defined(MAVCONN_PLATFORM_APPLE)
         char buffer[1024];
         unsigned int path_len = 1023;
         if (_NSGetExecutablePath(buffer, &path_len))
@@ -254,33 +254,33 @@ namespace pixhawk
 #endif
 
         executablePath_g = boost::filesystem::path(buffer);
-#ifndef PIXHAWK_PLATFORM_APPLE
+#ifndef MAVCONN_PLATFORM_APPLE
         executablePath_g = executablePath_g.branch_path(); // remove executable name
 #endif
     }
 
     /**
     @brief
-        Checks for "pixhawk_dev_build.keep_me" in the executable diretory.
+        Checks for "MAVCONN_dev_build.keep_me" in the executable diretory.
         If found it means that this is not an installed run, hence we
-        don't write the logs and config files to ~/.pixhawk
+        don't write the logs and config files to ~/.MAVCONN
     */
     void Core::checkDevBuild()
     {
-        if (boost::filesystem::exists(executablePath_g / "pixhawk_dev_build.keep_me"))
+        if (boost::filesystem::exists(executablePath_g / "MAVCONN_dev_build.keep_me"))
         {
 //            COUT(1) << "Running from the build tree." << std::endl;
             Core::isDevBuild_ = true;
-            mediaPath_g   = PIXHAWK_MEDIA_DEV_PATH;
-            configPath_g  = PIXHAWK_CONFIG_DEV_PATH;
-            logPath_g     = PIXHAWK_LOG_DEV_PATH;
-            capturePath_g = PIXHAWK_CAPTURE_DEV_PATH;
+            mediaPath_g   = MAVCONN_MEDIA_DEV_PATH;
+            configPath_g  = MAVCONN_CONFIG_DEV_PATH;
+            logPath_g     = MAVCONN_LOG_DEV_PATH;
+            capturePath_g = MAVCONN_CAPTURE_DEV_PATH;
         }
         else
         {
 #ifdef INSTALL_COPYABLE // --> relative paths
             // Also set the root path
-            boost::filesystem::path relativeExecutablePath(PIXHAWK_RUNTIME_INSTALL_PATH);
+            boost::filesystem::path relativeExecutablePath(MAVCONN_RUNTIME_INSTALL_PATH);
             rootPath_g = executablePath_g;
             while (!boost::filesystem::equivalent(rootPath_g / relativeExecutablePath, executablePath_g) && !rootPath_g.empty())
                 rootPath_g = rootPath_g.branch_path();
@@ -288,15 +288,15 @@ namespace pixhawk
                 ThrowException(General, "Could not derive a root directory. Might the binary installation directory contain '..' when taken relative to the installation prefix path?");
 
             // Using paths relative to the install prefix, complete them
-            mediaPath_g      = rootPath_g / PIXHAWK_MEDIA_INSTALL_PATH;
-            configPath_g     = rootPath_g / PIXHAWK_CONFIG_INSTALL_PATH;
-            logPath_g        = rootPath_g / PIXHAWK_LOG_INSTALL_PATH;
-            capturePath_g    = rootPath_g / PIXHAWK_CAPTURE_INSTALL_PATH;
+            mediaPath_g      = rootPath_g / MAVCONN_MEDIA_INSTALL_PATH;
+            configPath_g     = rootPath_g / MAVCONN_CONFIG_INSTALL_PATH;
+            logPath_g        = rootPath_g / MAVCONN_LOG_INSTALL_PATH;
+            capturePath_g    = rootPath_g / MAVCONN_CAPTURE_INSTALL_PATH;
 #else
             // There is no root path, so don't set it at all
 
             // Get user directory
-#  ifdef PIXHAWK_PLATFORM_UNIX /* Apple? */
+#  ifdef MAVCONN_PLATFORM_UNIX /* Apple? */
             char* userDataPathPtr(getenv("HOME"));
 #  else
             char* userDataPathPtr(getenv("APPDATA"));
@@ -304,12 +304,12 @@ namespace pixhawk
             if (userDataPathPtr == NULL)
                 ThrowException(General, "Could not retrieve user data path.");
             boost::filesystem::path userDataPath(userDataPathPtr);
-            userDataPath /= ".pixhawk";
+            userDataPath /= ".MAVCONN";
 
-            mediaPath_g      = userDataPath / PIXHAWK_MEDIA_INSTALL_PATH;
-            configPath_g     = userDataPath / PIXHAWK_CONFIG_INSTALL_PATH;
-            logPath_g        = userDataPath / PIXHAWK_LOG_INSTALL_PATH;
-            capturePath_g    = userDataPath / PIXHAWK_CAPTURE_INSTALL_PATH;
+            mediaPath_g      = userDataPath / MAVCONN_MEDIA_INSTALL_PATH;
+            configPath_g     = userDataPath / MAVCONN_CONFIG_INSTALL_PATH;
+            logPath_g        = userDataPath / MAVCONN_LOG_INSTALL_PATH;
+            capturePath_g    = userDataPath / MAVCONN_CAPTURE_INSTALL_PATH;
 #endif
         }
     }

@@ -25,7 +25,7 @@ PIXHAWK_LINK_LIBRARIES(px_camera
   ${Boost_FILESYSTEM_LIBRARY}
   ${CV_LIBRARY}
   ${HIGHGUI_LIBRARY}
-  lcmext
+  mavconn_lcm
   corelib
 )
 

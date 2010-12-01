@@ -26,7 +26,7 @@
  *
  */
 
-// 5/10/2009: Adapted to the Pixhawk Project by Fabian Landau
+// 5/10/2009: Adapted to the MAVCONN Project by Fabian Landau
 
 /**
     @file
@@ -68,7 +68,7 @@
 #include <iostream> // TODO
 
 
-namespace pixhawk
+namespace MAVCONN
 {
     /**
         @brief Returns the soft debug level, stored in the only existing instance of the OutputHandler class, configured in the config-file.
@@ -96,7 +96,7 @@ namespace pixhawk
 #define ORX_PRINT_DEBUG_OUTPUT 1
 #define ORX_HARD_DEBUG_LEVEL ORX_VERBOSE
 
-//#define COUT_EXEC(x) pixhawk::OutputHandler::getOutStream().setOutputLevel(x)
+//#define COUT_EXEC(x) MAVCONN::OutputHandler::getOutStream().setOutputLevel(x)
 #define COUT_EXEC(x) std::cout
 
 ////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_NONE
    #define COUT0 \
-   (pixhawk::getSoftDebugLevel() < ORX_NONE) ? COUT_EXEC(0) : COUT_EXEC(0)
+   (MAVCONN::getSoftDebugLevel() < ORX_NONE) ? COUT_EXEC(0) : COUT_EXEC(0)
   #else
    #define COUT0 \
     false ? COUT_EXEC(0) : COUT_EXEC(0)
@@ -125,7 +125,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_ERROR
    #define COUT1 \
-    (pixhawk::getSoftDebugLevel() < ORX_ERROR) ? COUT_EXEC(1) : COUT_EXEC(1)
+    (MAVCONN::getSoftDebugLevel() < ORX_ERROR) ? COUT_EXEC(1) : COUT_EXEC(1)
   #else
    #define COUT1 \
     false ? COUT_EXEC(1) : COUT_EXEC(1)
@@ -133,7 +133,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_WARNING
    #define COUT2 \
-    (pixhawk::getSoftDebugLevel() < ORX_WARNING) ? COUT_EXEC(2) : COUT_EXEC(2)
+    (MAVCONN::getSoftDebugLevel() < ORX_WARNING) ? COUT_EXEC(2) : COUT_EXEC(2)
   #else
    #define COUT2 \
     false ? COUT_EXEC(2) : COUT_EXEC(2)
@@ -141,7 +141,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_INFO
    #define COUT3 \
-    (pixhawk::getSoftDebugLevel() < ORX_INFO) ? COUT_EXEC(3) : COUT_EXEC(3)
+    (MAVCONN::getSoftDebugLevel() < ORX_INFO) ? COUT_EXEC(3) : COUT_EXEC(3)
   #else
    #define COUT3 \
     false ? COUT_EXEC(3) : COUT_EXEC(3)
@@ -149,7 +149,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_DEBUG
    #define COUT4 \
-    (pixhawk::getSoftDebugLevel() < ORX_DEBUG) ? COUT_EXEC(4) : COUT_EXEC(4)
+    (MAVCONN::getSoftDebugLevel() < ORX_DEBUG) ? COUT_EXEC(4) : COUT_EXEC(4)
   #else
    #define COUT4 \
     false ? COUT_EXEC(4) : COUT_EXEC(4)
@@ -157,7 +157,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_VERBOSE
    #define COUT5 \
-    (pixhawk::getSoftDebugLevel() < ORX_VERBOSE) ? COUT_EXEC(5) : COUT_EXEC(5)
+    (MAVCONN::getSoftDebugLevel() < ORX_VERBOSE) ? COUT_EXEC(5) : COUT_EXEC(5)
   #else
    #define COUT5 \
     false ? COUT_EXEC(5) : COUT_EXEC(5)
@@ -165,7 +165,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_ULTRA
    #define COUT6 \
-    (pixhawk::getSoftDebugLevel() < ORX_ULTRA) ? COUT_EXEC(6) : COUT_EXEC(6)
+    (MAVCONN::getSoftDebugLevel() < ORX_ULTRA) ? COUT_EXEC(6) : COUT_EXEC(6)
   #else
    #define COUT6 \
     false ? COUT_EXEC(6) : COUT_EXEC(6)
@@ -191,7 +191,7 @@ namespace pixhawk
 #define CCOUTORX_ULTRA   CCOUT6
 
 #define CCOUT_EXEC(x) \
-  pixhawk::OutputHandler::getOutStream().setOutputLevel(x) \
+  MAVCONN::OutputHandler::getOutStream().setOutputLevel(x) \
   << this->getIdentifier()->getName() << ": "
 
 #ifndef CCOUT
@@ -201,7 +201,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_NONE
    #define CCOUT0 \
-    (pixhawk::getSoftDebugLevel() < ORX_NONE) ? COUT_EXEC(0) : CCOUT_EXEC(0)
+    (MAVCONN::getSoftDebugLevel() < ORX_NONE) ? COUT_EXEC(0) : CCOUT_EXEC(0)
   #else
    #define CCOUT0 \
     false ? COUT_EXEC(0) : CCOUT_EXEC(0)
@@ -209,7 +209,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_ERROR
    #define CCOUT1 \
-    (pixhawk::getSoftDebugLevel() < ORX_ERROR) ? COUT_EXEC(1) : CCOUT_EXEC(1)
+    (MAVCONN::getSoftDebugLevel() < ORX_ERROR) ? COUT_EXEC(1) : CCOUT_EXEC(1)
   #else
    #define CCOUT1 \
     false ? COUT_EXEC(1) : CCOUT_EXEC(1)
@@ -217,7 +217,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_WARNING
    #define CCOUT2 \
-    (pixhawk::getSoftDebugLevel() < ORX_WARNING) ? COUT_EXEC(2) : CCOUT_EXEC(2)
+    (MAVCONN::getSoftDebugLevel() < ORX_WARNING) ? COUT_EXEC(2) : CCOUT_EXEC(2)
   #else
    #define CCOUT2 \
     false ? COUT_EXEC(2) : CCOUT_EXEC(2)
@@ -225,7 +225,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_INFO
    #define CCOUT3 \
-    (pixhawk::getSoftDebugLevel() < ORX_INFO) ? COUT_EXEC(3) : CCOUT_EXEC(3)
+    (MAVCONN::getSoftDebugLevel() < ORX_INFO) ? COUT_EXEC(3) : CCOUT_EXEC(3)
   #else
    #define CCOUT3 \
     false ? COUT_EXEC(3) : CCOUT_EXEC(3)
@@ -233,7 +233,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_DEBUG
    #define CCOUT4 \
-    (pixhawk::getSoftDebugLevel() < ORX_DEBUG) ? COUT_EXEC(4) : CCOUT_EXEC(4)
+    (MAVCONN::getSoftDebugLevel() < ORX_DEBUG) ? COUT_EXEC(4) : CCOUT_EXEC(4)
   #else
    #define CCOUT4 \
     false ? COUT_EXEC(4) : CCOUT_EXEC(4)
@@ -241,7 +241,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_VERBOSE
    #define CCOUT5 \
-    (pixhawk::getSoftDebugLevel() < ORX_VERBOSE) ? COUT_EXEC(5) : CCOUT_EXEC(5)
+    (MAVCONN::getSoftDebugLevel() < ORX_VERBOSE) ? COUT_EXEC(5) : CCOUT_EXEC(5)
   #else
    #define CCOUT5 \
     false ? COUT_EXEC(5) : CCOUT_EXEC(5)
@@ -249,7 +249,7 @@ namespace pixhawk
 
   #if ORX_HARD_DEBUG_LEVEL >= ORX_ULTRA
    #define CCOUT6 \
-    (pixhawk::getSoftDebugLevel() < ORX_ULTRA) ? COUT_EXEC(6) : CCOUT_EXEC(6)
+    (MAVCONN::getSoftDebugLevel() < ORX_ULTRA) ? COUT_EXEC(6) : CCOUT_EXEC(6)
   #else
    #define CCOUT6 \
     false ? COUT_EXEC(6) : CCOUT_EXEC(6)
