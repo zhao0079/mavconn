@@ -56,6 +56,7 @@
 #endif
 #include <boost/program_options.hpp>
 #include <glib.h>
+#include <cxtypes.h>
 #include "mavconn.h"
 
 // External namespaces

@@ -43,7 +43,7 @@ This file is part of the MAVCONN project
 #include <mavlink.h>
 
 // OpenCV types
-#include <cxtypes.h>
+//#include <cxtypes.h>
 
 // LCM transport includes
 #include <lcm/lcm.h>
@@ -108,13 +108,14 @@ struct Camera_t
 	float toBody[16]; ///< Transformation matrix from camera to body coordinate frame
 };
 
-struct CamImage_t
+/**struct CamImage_t
 {
 	uint64_t utime; ///< Milliseconds since unix epoch (01/01/1970, 00:00)
 	uint32_t seq;   ///< Image sequence, e.g. to detect at which rate images are processed
 	Camera_t cam;   ///< ID of the capturing camera
 	IplImage img;   ///< The image container, as IPLImage
 };
+*/
 
 #ifndef isnan
 # define isnan(x) \
