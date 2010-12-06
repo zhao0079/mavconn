@@ -190,12 +190,8 @@ int open_port(std::string port)
 	fd = open(port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
 	if (fd == -1)
 	{
-		/*
-		 * Could not open the port.
-		 */
-
-		fprintf(stderr, "\nFATAL ERROR: Unable to open %s.. \n", port.c_str());
-		exit(-1);
+		/* Could not open the port. */
+		return(-1);
 	}
 	else
 	{
@@ -205,7 +201,7 @@ int open_port(std::string port)
 	return (fd);
 }
 
-void setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity, bool hardware_control)
+bool setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity, bool hardware_control)
 {
 	//struct termios options;
 
@@ -213,12 +209,12 @@ void setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity, boo
 	if(!isatty(fd))
 	{
 		fprintf(stderr, "\nERROR: file descriptor %s is NOT a serial port\n", port.c_str());
-		exit(EXIT_FAILURE);
+		return false;
 	}
 	if(tcgetattr(fd, &config) < 0)
 	{
 		fprintf(stderr, "\nERROR: could not read configuration of port %s\n", port.c_str());
-		exit(EXIT_FAILURE);
+		return false;
 	}
 	//
 	// Input flags - Turn off input processing
@@ -268,7 +264,7 @@ void setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity, boo
 		if (cfsetispeed(&config, B1200) < 0 || cfsetospeed(&config, B1200) < 0)
 		{
 			fprintf(stderr, "\nERROR: Could not set desired baud rate of %d Baud\n", baud);
-			exit(EXIT_FAILURE);
+			return false;
 		}
 		break;
 	case 1800:
@@ -287,21 +283,21 @@ void setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity, boo
 		if (cfsetispeed(&config, B38400) < 0 || cfsetospeed(&config, B38400) < 0)
 		{
 			fprintf(stderr, "\nERROR: Could not set desired baud rate of %d Baud\n", baud);
-			exit(EXIT_FAILURE);
+			return false;
 		}
 		break;
 	case 57600:
 		if (cfsetispeed(&config, B57600) < 0 || cfsetospeed(&config, B57600) < 0)
 		{
 			fprintf(stderr, "\nERROR: Could not set desired baud rate of %d Baud\n", baud);
-			exit(EXIT_FAILURE);
+			return false;
 		}
 		break;
 	case 115200:
 		if (cfsetispeed(&config, B115200) < 0 || cfsetospeed(&config, B115200) < 0)
 		{
 			fprintf(stderr, "\nERROR: Could not set desired baud rate of %d Baud\n", baud);
-			exit(EXIT_FAILURE);
+			return false;
 		}
 		break;
 	default:
@@ -359,8 +355,9 @@ void setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity, boo
 	if(tcsetattr(fd, TCSAFLUSH, &config) < 0)
 	{
 		fprintf(stderr, "\nERROR: could not set configuration of port %s\n", port.c_str());
-		exit(EXIT_FAILURE);
+		return false;
 	}
+	return true;
 }
 
 void close_port(int fd)
@@ -484,9 +481,28 @@ int main(int argc, char* argv[])
 
 	// Exit if opening port failed
 	// Open the serial port.
-	if (!silent) printf("Trying to connect to %s.. \n", port.c_str());
+	if (!silent) printf("Trying to connect to %s.. ", port.c_str());
 	int fd = open_port(port);
-	setup_port(fd, baud, 8, 1, false, false);
+	if (fd == -1)
+	{
+		if (!silent) printf("failure, could not open port.\n");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		if (!silent) printf("success.\n");
+	}
+	if (!silent) printf("Trying to configure %s.. ", port.c_str());
+	bool setup = setup_port(fd, baud, 8, 1, false, false);
+	if (!setup)
+	{
+		if (!silent) printf("failure, could not configure port.\n");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		if (!silent) printf("success.\n");
+	}
 	int* fd_ptr = &fd;
 
 	// SETUP LCM

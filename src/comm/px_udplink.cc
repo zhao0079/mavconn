@@ -166,9 +166,12 @@ void* udp_wait(void* lcm_ptr)
 			if (debug) printf("%02x ", tmpchar);
 			if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &msg, &status))
 			{
-				// Packet received
-				printf("\n(SYS: %d/COMP: %d/UDP) Received message from UDP with %i payload bytes and %i total length\n",
-						msg.sysid, msg.compid, msg.len, recsize);
+				if (verbose)
+				{
+					// Packet received
+					printf("\n(SYS: %d/COMP: %d/UDP) Received message from UDP with %i payload bytes and %i total length\n",
+							msg.sysid, msg.compid, msg.len, recsize);
+				}
 				mavlink_message_t_publish (lcm, "MAVLINK", &msg);
 			}
 		}
