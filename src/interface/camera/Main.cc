@@ -31,11 +31,9 @@ This file is part of the MAVCONN project
 #include <cstdlib>
 
 #include "Camera.h"
-#include "Core.h"
 
 int main(int argc, char* argv[])
 {
-    MAVCONN::Core core("camera");
     cvSetErrMode(CV_ErrModeParent);
 
     MAVCONN::Camera camera;
