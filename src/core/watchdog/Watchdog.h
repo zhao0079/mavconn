@@ -35,7 +35,6 @@ This file is part of the MAVCONN project
 #include "timer/Timer.h"
 #include "Process.h"
 #include "Command.h"
-#include "Core.h"
 
 // Define signals for systems which do not have
 // the SIGRT signals (e.g. Darwin / Mac Os)
@@ -102,7 +101,7 @@ namespace MAVCONN
                 static inline const Watchdog& getInstance()
                     { return (*Watchdog::instance_s); }
 
-                void parseConfigValues(int argc, char* argv[], const Core& core);
+                void parseConfigValues(int argc, char* argv[]);
                 void parseProcesses();
                 void registerSignalHandlers();
                 void unregisterSignalHandlers();

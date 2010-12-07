@@ -47,8 +47,6 @@ This file is part of the MAVCONN project
 */
 int main(int argc, char* argv[])
 {
-    MAVCONN::Core core("watchdogcontrol");
-
     MAVCONN::WatchdogControl control;
     control.run();
 

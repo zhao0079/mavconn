@@ -39,6 +39,8 @@ This file is part of the MAVCONN project
 
 #include <mavconn.h>
 
+std::string logPath("log/");
+
 // Namespace shortcut
 namespace config = boost::program_options;
 
@@ -84,7 +86,7 @@ namespace watchdog
     /**
         @brief Gets the command line arguments and the values from the config file.
     */
-    void Watchdog::parseConfigValues(int argc, char* argv[], const Core& core)
+    void Watchdog::parseConfigValues(int argc, char* argv[])
     {
         // Program options
         config::options_description proc("Start process");
@@ -119,7 +121,7 @@ namespace watchdog
         // Load the config file if no processes were defined on the commandline (or if the --config argument is true)
         if (!this->vm_.count("process") || this->vm_["config"].as<bool>() || this->vm_.count("file"))
         {
-            std::string filename = core.getConfigPathString();
+            std::string filename = "config";
 
             if (this->vm_.count("file"))
                 filename += this->vm_["file"].as<std::string>();
@@ -225,7 +227,7 @@ namespace watchdog
 
         try
         {
-            boost::filesystem::directory_iterator file(Core::getLogPath());
+            boost::filesystem::directory_iterator file("log");
             boost::filesystem::directory_iterator end;
 
             while (file != end)
@@ -261,14 +263,14 @@ namespace watchdog
 
         if (max == 0)
         {
-            path = Core::getLogPathString() + "watchdog1/";
+            path = logPath + "watchdog1/";
         }
         else
         {
             std::ostringstream oss;
             oss << (max + 1);
 
-            path = Core::getLogPathString() + "watchdog" + oss.str() + "/";
+            path = logPath + "watchdog" + oss.str() + "/";
         }
 
         boost::filesystem::create_directories(path);

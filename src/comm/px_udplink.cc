@@ -54,13 +54,10 @@
 #include <sys/time.h>
 #include <time.h>
 #endif
-#include <boost/program_options.hpp>
 #include <glib.h>
 #include <cxtypes.h>
 #include "mavconn.h"
 
-// External namespaces
-namespace config = boost::program_options;
 // Settings
 int systemid;
 int componentid;

@@ -28,20 +28,36 @@ This file is part of the MAVCONN project
 
 ========================================================================*/
 
-#include "Watchdog.h"
+#include "Clock.h"
 
-/**
-    @brief The main function creates and initializes the watchdog.
-*/
-int main(int argc, char* argv[])
+namespace MAVCONN {
+
+Clock::Clock(){}
+
+Clock::~Clock(){}
+
+unsigned long Clock::getMilliseconds()
 {
-    MAVCONN::watchdog::Watchdog watchdog;
+    struct timeval now;
+	gettimeofday(&now, NULL);
+    return now.tv_sec*1000 + now.tv_usec/1000 + offset/1000;
+}
 
-    watchdog.parseConfigValues(argc, argv);
-    watchdog.parseProcesses();
-    watchdog.registerSignalHandlers();
-    watchdog.run();
-    watchdog.unregisterSignalHandlers();
+unsigned long Clock::getMicroseconds()
+{
+    struct timeval now;
+	gettimeofday(&now, NULL);
+	return now.tv_sec*1000000 + now.tv_usec + offset;
+}
 
-    return EXIT_SUCCESS;
+unsigned long Clock::getOffset()
+{
+    return offset;
+}
+
+void Clock::addOffset(unsigned long off)
+{
+    offset += off;
+}
+
 }
