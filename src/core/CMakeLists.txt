@@ -9,8 +9,8 @@ INCLUDE_DIRECTORIES(
   ${GLIBTOP_INCLUDE_DIR}
 )
 
-PIXHAWK_EXECUTABLE(px_core px_core.cc)
-PIXHAWK_LINK_LIBRARIES(px_core
+PIXHAWK_EXECUTABLE(px_system_control px_core.cc)
+PIXHAWK_LINK_LIBRARIES(px_system_control
   mavconn_lcm
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${GLIBTOP_LIBRARY}
