@@ -42,7 +42,6 @@ This file is part of the MAVCONN project
 
 
 #include "CameraOperations.h"
-#include "Sleep.h"
 #include "PauseInput.h"
 
 namespace config = boost::program_options;

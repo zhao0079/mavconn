@@ -29,7 +29,6 @@ This file is part of the MAVCONN project
 ========================================================================*/
 
 #include "WatchdogControl.h"
-#include "Core.h"
 #include <mavconn.h>
 #include <iostream>
 

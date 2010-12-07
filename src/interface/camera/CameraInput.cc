@@ -29,7 +29,6 @@ This file is part of the MAVCONN project
 ========================================================================*/
 
 #include "CameraInput.h"
-#include "Sleep.h"
 /*
 #if LIBDC1394_VERSION >= 0200
 #  include <dc1394/dc1394.h>
