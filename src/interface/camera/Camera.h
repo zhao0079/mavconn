@@ -35,6 +35,7 @@ This file is part of the MAVCONN project
 #include <iostream>
 #include <list>
 #include <vector>
+#include <unistd.h>
 
 // forward declaration
 namespace boost

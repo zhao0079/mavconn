@@ -99,7 +99,7 @@ namespace MAVCONN
             return;
         }
         this->getCamera()->setInputResourceName("index " + convertValueToString(this->index_));
-        msleep(this->delay_);
+        ::usleep(this->delay_*1000);
     }
 
     void CameraInput::tick()

@@ -583,7 +583,7 @@ namespace MAVCONN
                     ++it;
             }
 
-            usleep(100);
+            ::usleep(100);
 
             if (this->bRequestedRestart_)
             {
