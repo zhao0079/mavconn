@@ -4,4 +4,7 @@ struct point_cloud_message_t
     float x[count];
     float y[count];
     float z[count];
+    int8_t r[count];
+    int8_t g[count];
+    int8_t b[count];
 }

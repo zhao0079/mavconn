@@ -20,11 +20,14 @@ int64_t __point_cloud_message_t_hash_recursive(const __lcm_hash_ptr *p)
     const __lcm_hash_ptr cp = { p, (void*)__point_cloud_message_t_get_hash };
     (void) cp;
  
-    int64_t hash = 0xf99ebd3a456c59b1LL
+    int64_t hash = 0x7f3c78e6e4ccdd11LL
          + __int64_t_hash_recursive(&cp)
          + __float_hash_recursive(&cp)
          + __float_hash_recursive(&cp)
          + __float_hash_recursive(&cp)
+         + __int8_t_hash_recursive(&cp)
+         + __int8_t_hash_recursive(&cp)
+         + __int8_t_hash_recursive(&cp)
         ;
  
     return (hash<<1) + ((hash>>63)&1);
@@ -58,6 +61,15 @@ int __point_cloud_message_t_encode_array(void *buf, int offset, int maxlen, cons
         thislen = __float_encode_array(buf, offset + pos, maxlen - pos, p[element].z, p[element].count);
         if (thislen < 0) return thislen; else pos += thislen;
  
+        thislen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, p[element].r, p[element].count);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, p[element].g, p[element].count);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, p[element].b, p[element].count);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
     }
     return pos;
 }
@@ -89,6 +101,12 @@ int __point_cloud_message_t_encoded_array_size(const point_cloud_message_t *p, i
  
         size += __float_encoded_array_size(p[element].z, p[element].count);
  
+        size += __int8_t_encoded_array_size(p[element].r, p[element].count);
+ 
+        size += __int8_t_encoded_array_size(p[element].g, p[element].count);
+ 
+        size += __int8_t_encoded_array_size(p[element].b, p[element].count);
+ 
     }
     return size;
 }
@@ -119,6 +137,18 @@ int __point_cloud_message_t_decode_array(const void *buf, int offset, int maxlen
         thislen = __float_decode_array(buf, offset + pos, maxlen - pos, p[element].z, p[element].count);
         if (thislen < 0) return thislen; else pos += thislen;
  
+        p[element].r = (int8_t*) lcm_malloc(sizeof(int8_t) * p[element].count);
+        thislen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, p[element].r, p[element].count);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        p[element].g = (int8_t*) lcm_malloc(sizeof(int8_t) * p[element].count);
+        thislen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, p[element].g, p[element].count);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        p[element].b = (int8_t*) lcm_malloc(sizeof(int8_t) * p[element].count);
+        thislen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, p[element].b, p[element].count);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
     }
     return pos;
 }
@@ -138,6 +168,15 @@ int __point_cloud_message_t_decode_array_cleanup(point_cloud_message_t *p, int e
  
         __float_decode_array_cleanup(p[element].z, p[element].count);
         if (p[element].z) free(p[element].z);
+ 
+        __int8_t_decode_array_cleanup(p[element].r, p[element].count);
+        if (p[element].r) free(p[element].r);
+ 
+        __int8_t_decode_array_cleanup(p[element].g, p[element].count);
+        if (p[element].g) free(p[element].g);
+ 
+        __int8_t_decode_array_cleanup(p[element].b, p[element].count);
+        if (p[element].b) free(p[element].b);
  
     }
     return 0;
@@ -179,6 +218,15 @@ int __point_cloud_message_t_clone_array(const point_cloud_message_t *p, point_cl
  
         q[element].z = (float*) lcm_malloc(sizeof(float) * q[element].count);
         __float_clone_array(p[element].z, q[element].z, p[element].count);
+ 
+        q[element].r = (int8_t*) lcm_malloc(sizeof(int8_t) * q[element].count);
+        __int8_t_clone_array(p[element].r, q[element].r, p[element].count);
+ 
+        q[element].g = (int8_t*) lcm_malloc(sizeof(int8_t) * q[element].count);
+        __int8_t_clone_array(p[element].g, q[element].g, p[element].count);
+ 
+        q[element].b = (int8_t*) lcm_malloc(sizeof(int8_t) * q[element].count);
+        __int8_t_clone_array(p[element].b, q[element].b, p[element].count);
  
     }
     return 0;

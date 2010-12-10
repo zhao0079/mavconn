@@ -23,6 +23,9 @@ struct _point_cloud_message_t
     float      *x;
     float      *y;
     float      *z;
+    int8_t     *r;
+    int8_t     *g;
+    int8_t     *b;
 };
  
 point_cloud_message_t   *point_cloud_message_t_copy(const point_cloud_message_t *p);
