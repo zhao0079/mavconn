@@ -56,7 +56,7 @@ public:
 		}
 	}
 
-	void sharedMemWriteImage(const IplImage* frame, uint64_t cam_id, uint32_t cam_no, uint64_t timestamp, float roll, float pitch, uint32_t exposure, lcm_t* lcm)
+	void sharedMemWriteImage(const IplImage* frame, uint64_t cam_id, uint32_t cam_no, uint64_t timestamp, float roll, float pitch, float yaw, float z, float lon, float lat, float alt, uint32_t exposure, lcm_t* lcm)
 	{
 		//printf("WRITING CAM %d\n", cam_no);
 		// FIXME Calculate properly
@@ -109,6 +109,11 @@ public:
 		imginfo.gain = 1;//gain;
 		imginfo.roll = roll;
 		imginfo.pitch = pitch;
+		imginfo.yaw = yaw;
+		imginfo.local_z = z;
+		imginfo.lon = lon;
+		imginfo.lat = lat;
+		imginfo.alt = alt;
 
 		//std::cout << "cam #" << (int)imginfo.cam_no << " key: " << imginfo.key << " size: " << shm_size << " width: " << (int)imginfo.width << " height: " << (int)imginfo.height << " depth: " << (int)imginfo.depth << " channels: " << (int)imginfo.channels << " " << std::endl;
 
@@ -121,7 +126,7 @@ public:
 		shmdt(this->shm);
 	}
 
-	void sharedMemWriteStereoImage(const IplImage* frame, uint64_t cam_id, uint32_t cam_no, const IplImage* frame_right, uint64_t cam_id_right, uint32_t cam_no_right, uint64_t timestamp, float roll, float pitch, uint32_t exposure, lcm_t* lcm)
+	void sharedMemWriteStereoImage(const IplImage* frame, uint64_t cam_id, uint32_t cam_no, const IplImage* frame_right, uint64_t cam_id_right, uint32_t cam_no_right, uint64_t timestamp, float roll, float pitch, float yaw, float z, float lon, float lat, float alt, uint32_t exposure, lcm_t* lcm)
 	{
 		// FIXME Calculate properly
 		struct timeval tv;
@@ -179,6 +184,11 @@ public:
 		imginfo.gain = 1;//gain;
 		imginfo.roll = roll;
 		imginfo.pitch = pitch;
+		imginfo.yaw = yaw;
+		imginfo.local_z = z;
+		imginfo.lon = lon;
+		imginfo.lat = lat;
+		imginfo.alt = alt;
 
 		//std::cout << "cam #" << (int)imginfo.cam_no << " key: " << imginfo.key << " size: " << shm_size << " width: " << (int)imginfo.width << " height: " << (int)imginfo.height << " depth: " << (int)imginfo.depth << " channels: " << (int)imginfo.channels << " " << std::endl;
 

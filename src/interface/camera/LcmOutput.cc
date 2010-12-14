@@ -102,7 +102,7 @@ namespace MAVCONN
         gettimeofday(&tv, NULL);
         uint64_t timestamp = ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
 
-        this->imageServer_.sharedMemWriteImage(image, 0, 0, timestamp, 0, 0, 0, this->lcm_);
+        this->imageServer_.sharedMemWriteImage(image, 0, 0, timestamp, 0, 0, 0, 0, 0, 0, 0, 0, this->lcm_);
 
         this->bFirstFrame_ = false;
 
