@@ -1,0 +1,14 @@
+struct quad_mesh_message_t
+{    
+    int32_t image_width;
+    int32_t image_height;
+    int64_t image_size;
+    int8_t image_data[image_size];
+
+    int64_t num_vertices;
+    float vertex_x[num_vertices];
+    float vertex_y[num_vertices];
+    float vertex_z[num_vertices];
+    float tex_coord_x[num_vertices];
+    float tex_coord_y[num_vertices];
+}
