@@ -130,7 +130,9 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,co
 			status.mode = MAV_MODE_LOCKED;
 			mavlink_msg_sys_status_encode(systemid, compid, &response, &status);
 			mavlink_message_t_publish ((lcm_t*)user, "MAVLINK", &response);
-			system ("halt");
+			if (system ("halt"))
+				if (verbose) std::cerr << "Shutdown failed." << std::endl;
+
 		}
 		break;
 		case MAV_ACTION_REBOOT:
@@ -142,7 +144,8 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,co
 			status.mode = MAV_MODE_LOCKED;
 			mavlink_msg_sys_status_encode(systemid, compid, &response, &status);
 			mavlink_message_t_publish ((lcm_t*)user, "MAVLINK", &response);
-			system ("reboot");
+			if(system ("reboot"))
+				if (verbose) std::cerr << "Reboot failed." << std::endl;
 		}
 		break;
 		}
