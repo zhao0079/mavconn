@@ -38,16 +38,16 @@ PIXHAWK_LINK_LIBRARIES(px_gpsd
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
-PIXHAWK_EXECUTABLE(px_imagestreamer px_imagestreamer.cc)
-PIXHAWK_LINK_LIBRARIES(px_imagestreamer
-  mavconn_lcm
-  ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  ${CXCORE_LIBRARY}
-  ${CV_LIBRARY}
-  ${HIGHGUI_LIBRARY}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-)
+#PIXHAWK_EXECUTABLE(px_imagestreamer px_imagestreamer.cc)
+#PIXHAWK_LINK_LIBRARIES(px_imagestreamer
+#  mavconn_lcm
+#  ${Boost_PROGRAM_OPTIONS_LIBRARY}
+#  ${CXCORE_LIBRARY}
+#  ${CV_LIBRARY}
+#  ${HIGHGUI_LIBRARY}
+#  ${Boost_FILESYSTEM_LIBRARY}
+#  ${Boost_SYSTEM_LIBRARY}
+#)
 
 IF(VICON_FOUND)
 IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
