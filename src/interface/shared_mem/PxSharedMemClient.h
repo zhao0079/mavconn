@@ -310,6 +310,58 @@ public:
 			return true;
 		}
 	}
+
+	bool sharedMemCopyKinectImage(const mavlink_message_t* msg, IplImage* colorFrame, IplImage* depthFrame)
+	{
+		// Decode message
+		if (msg->msgid != MAVLINK_MSG_ID_IMAGE_AVAILABLE)
+		{
+			// Instantly return if MAVLink message did not contain an image
+			return false;
+		}
+		else
+		{
+			// Extract the image meta information and pointer location from the image
+			mavlink_image_available_t img;
+			mavlink_msg_image_available_decode(msg, &img);
+
+			int cam = (int)img.cam_no;
+			int colorsize = img.width * img.height * 3; // IPL_DEPTH_8U, 3 channels
+			int depthsize = img.width * img.height * 2; // IPL_DEPTH_16U, 1 channel
+
+			// Check if shared memory for this camera is already attached
+			if (shms[cam] == NULL || shm_sizes[cam] != (colorsize + depthsize))
+			{
+				//attachSharedMem((int)img.key, size, &shm);
+				shm_sizes[cam] = colorsize + depthsize;
+			}
+
+			shms[cam] = shm;
+			char* ptr;
+			key_t m_key = img.key;
+
+			int shmid;
+			if ((shmid = shmget(m_key, shm_sizes[cam], IPC_CREAT | 0666)) < 0)
+			{
+				perror("shmget");
+				return false;
+			}
+
+			// Attach shared memory segment
+			if((ptr = (char*)shmat(shmid, NULL, SHM_RDONLY)) == (char*)-1)
+			{
+				perror("shmat");
+				return false;
+			}
+
+			// Copy message into IPLImage
+			memcpy(colorFrame->imageData, ptr, colorsize);
+			memcpy(depthFrame->imageData, ptr+colorsize, depthsize);
+
+			shmdt(ptr);
+			return true;
+		}
+	}
 /*
 	char* sharedMemGetShmPtr(const mavlink_message_t* imgMsg)
 											{
