@@ -325,6 +325,9 @@ public:
 			mavlink_image_available_t img;
 			mavlink_msg_image_available_decode(msg, &img);
 
+			if (img.img_buf_index != 3)
+				return false;
+
 			int cam = (int)img.cam_no;
 			int colorsize = img.width * img.height * 3; // IPL_DEPTH_8U, 3 channels
 			int depthsize = img.width * img.height * 2; // IPL_DEPTH_16U, 1 channel

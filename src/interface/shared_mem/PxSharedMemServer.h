@@ -265,7 +265,7 @@ public:
 		imginfo.timestamp = timestamp;
 		imginfo.valid_until = valid_until;
 		imginfo.img_seq = this->img_seq;
-		imginfo.img_buf_index = 2; //FIXME
+		imginfo.img_buf_index = 3; //FIXME
 		imginfo.width = depthimg_size.width;
 		imginfo.height = depthimg_size.height;
 		imginfo.depth = 0;
