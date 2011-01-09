@@ -53,8 +53,8 @@ FUNCTION(PIXHAWK_INSTALL)
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/gl_overlay_message_t.h
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/obstacle_map_message_t.h
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/point_cloud_message_t.h
-	${CMAKE_SOURCE_DIR}/src/comm/lcm/quad_mesh_message_t.h
-	${CMAKE_SOURCE_DIR}/src/comm/lcm/target_position_message_t.h
+	${CMAKE_SOURCE_DIR}/src/comm/lcm/texture_facet_t.h
+	${CMAKE_SOURCE_DIR}/src/comm/lcm/texture_map_message_t.h
   )
   INSTALL(FILES ${MAVCONNLCM_HEADERS} DESTINATION ${PIXHAWK_INCLUDE_INSTALL_PATH}/comm/lcm/)
 

@@ -20,12 +20,8 @@ typedef struct _point_cloud_message_t point_cloud_message_t;
 struct _point_cloud_message_t
 {
     int64_t    count;
-    float      *x;
-    float      *y;
-    float      *z;
-    int8_t     *r;
-    int8_t     *g;
-    int8_t     *b;
+    float      **points;
+    int8_t     **colors;
 };
  
 point_cloud_message_t   *point_cloud_message_t_copy(const point_cloud_message_t *p);

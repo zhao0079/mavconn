@@ -12,8 +12,8 @@ SET_SOURCE_FILES(LCMEXT_SRC_FILES
   gl_overlay_message_t.c
   obstacle_map_message_t.c
   point_cloud_message_t.c
-  quad_mesh_message_t.c
-  target_position_message_t.c
+  texture_facet_t.c
+  texture_map_message_t.c
 )
 PIXHAWK_LIBRARY(mavconn_lcm SHARED ${LCMEXT_SRC_FILES})
 SET_TARGET_PROPERTIES(mavconn_lcm PROPERTIES COMPILE_FLAGS "-D_REENTRANT -Wno-pointer-sign")

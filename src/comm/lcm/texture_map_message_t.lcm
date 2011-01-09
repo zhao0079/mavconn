@@ -1,0 +1,16 @@
+struct texture_map_message_t
+{
+    int32_t seq_no;
+
+    int32_t image_width;
+    int32_t image_height;
+    int64_t image_size;
+    int8_t image_data[image_size];
+
+    float patch_resolution;
+    int64_t num_patches;
+    float patches[num_patches][4];
+
+    int64_t num_tex_facets;
+    texture_facet_t tex_facets[num_tex_facets];
+}
