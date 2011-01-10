@@ -50,7 +50,6 @@ namespace config = boost::program_options;
 lcm_t* lcm;
 
 bool debug;             	///< boolean for debug output or behavior
-bool exampleWaypoints;  	///< boolean for setting some waypoints (for testing)
 bool verbose;           	///< boolean for verbose output
 std::string configFile;		///< Configuration file for parameters
 
@@ -141,6 +140,10 @@ void send_waypoint_current(uint16_t seq)
 
 		if (verbose) printf("Broadcasted new current waypoint %u\n", wpc.seq);
 	}
+	else
+	{
+		if (verbose) printf("ERROR: index out of bounds\n");
+	}
 }
 
 /*
@@ -185,6 +188,10 @@ void send_setpoint(uint16_t seq)
 		uint64_t now = ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
 		timestamp_last_send_setpoint = now;
 	}
+	else
+	{
+		if (verbose) printf("ERROR: index out of bounds\n");
+	}
 }
 
 void send_waypoint_count(uint8_t target_systemid, uint8_t target_compid, uint16_t count)
@@ -226,16 +233,23 @@ void send_waypoint(uint8_t target_systemid, uint8_t target_compid, uint16_t seq)
 
 void send_waypoint_request(uint8_t target_systemid, uint8_t target_compid, uint16_t seq)
 {
-	mavlink_message_t msg;
-	mavlink_waypoint_request_t wpr;
-	wpr.target_system = target_systemid;
-	wpr.target_component = target_compid;
-	wpr.seq = seq;
-	mavlink_msg_waypoint_request_encode(systemid, compid, &msg, &wpr);
-	mavlink_message_t_publish(lcm, "MAVLINK", &msg);
-	if (verbose) printf("Sent waypoint request %u to ID %u\n", wpr.seq, wpr.target_system);
+	if (seq < waypoints->size())
+	{
+		mavlink_message_t msg;
+		mavlink_waypoint_request_t wpr;
+		wpr.target_system = target_systemid;
+		wpr.target_component = target_compid;
+		wpr.seq = seq;
+		mavlink_msg_waypoint_request_encode(systemid, compid, &msg, &wpr);
+		mavlink_message_t_publish(lcm, "MAVLINK", &msg);
+		if (verbose) printf("Sent waypoint request %u to ID %u\n", wpr.seq, wpr.target_system);
 
-	usleep(paramClient->getParamValue("PROTOCOLDELAY"));
+		usleep(paramClient->getParamValue("PROTOCOLDELAY"));
+	}
+	else
+	{
+		if (verbose) printf("ERROR: index out of bounds\n");
+	}
 }
 
 /*
@@ -294,6 +308,10 @@ float distanceToSegment(uint16_t seq, float x, float y, float z)
 			return (C-A).length();
 		}
 	}
+	else
+	{
+		if (verbose) printf("ERROR: index out of bounds\n");
+	}
 	return -1.f;
 }
 
@@ -307,6 +325,10 @@ float distanceToPoint(uint16_t seq, float x, float y, float z)
 		const PxVector3 C(x, y, z);
 
 		return (C-A).length();
+	}
+	else
+	{
+		if (verbose) printf("ERROR: index out of bounds\n");
 	}
 	return -1.f;
 }
@@ -335,7 +357,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 		}
 	}
 
-	if(now-timestamp_last_send_setpoint > paramClient->getParamValue("SETPOINTDELAY"))
+	if(now-timestamp_last_send_setpoint > paramClient->getParamValue("SETPOINTDELAY") && current_active_wp_id < waypoints->size())
 	{
 		send_setpoint(current_active_wp_id);
 	}
@@ -815,7 +837,8 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 					}
 					else
 					{
-						current_active_wp_id++;
+						if (current_active_wp_id + 1 < waypoints->size())
+							current_active_wp_id++;
 					}
 
 					// Fly to next waypoint
@@ -848,7 +871,6 @@ int main(int argc, char* argv[])
 	desc.add_options()
 					("help", "produce help message")
 					("debug,d", config::bool_switch(&debug)->default_value(false), "Emit debug information")
-					("example,e", config::bool_switch(&exampleWaypoints)->default_value(false), "Start with some waypoints already set")
 					("verbose,v", config::bool_switch(&verbose)->default_value(false), "verbose output")
 					("config", config::value<std::string>(&configFile)->default_value("config/parameters_waypointplanner.cfg"), "Config file for system parameters")
 					("waypointfile", config::value<std::string>(&waypointfile)->default_value(""), "Config file for waypoint")
@@ -861,68 +883,6 @@ int main(int argc, char* argv[])
 	{
 		std::cout << desc << std::endl;
 		return 1;
-	}
-
-	// set up some example waypoints
-	if (exampleWaypoints)
-	{
-		mavlink_waypoint_t* test = new mavlink_waypoint_t();
-		test->seq = 0;
-		test->frame = 1;
-		test->current = true;
-		test->x =  0.2000f;
-		test->y =  0.2000f;
-		test->z = -0.2000f;
-		test->yaw = 0.0f;
-		test->autocontinue = true;
-		test->orbit = 0.f;
-		test->param1 = 0.1f;
-		test->param2 = 2000;
-		waypoints->push_back(test);
-
-		current_active_wp_id = 0;
-
-		test = new mavlink_waypoint_t();
-		test->seq = 1;
-		test->frame = 1;
-		test->current = false;
-		test->x =  0.4000f;
-		test->y =  0.2000f;
-		test->z = -0.2000f;
-		test->yaw = 0.25f;
-		test->autocontinue = true;
-		test->orbit = 0.f;
-		test->param1 = 0.1f;
-		test->param2 = 2000;
-		waypoints->push_back(test);
-
-		test = new mavlink_waypoint_t();
-		test->seq = 2;
-		test->frame = 1;
-		test->current = false;
-		test->x =  0.4000f;
-		test->y =  0.4000f;
-		test->z = -0.2000f;
-		test->yaw = 0.5f;
-		test->autocontinue = true;
-		test->orbit = 0.f;
-		test->param1 = 0.1f;
-		test->param2 = 2000;
-		waypoints->push_back(test);
-
-		test = new mavlink_waypoint_t();
-		test->seq = 3;
-		test->frame = 1;
-		test->current = false;
-		test->x =  0.2000f;
-		test->y =  0.4000f;
-		test->z = -0.2000f;
-		test->yaw = 0.75f;
-		test->autocontinue = false;
-		test->orbit = 0.f;
-		test->param1 = 0.1f;
-		test->param2 = 2000;
-		waypoints->push_back(test);
 	}
 
 	lcm = lcm_create ("udpm://");
