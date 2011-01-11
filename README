@@ -1,0 +1,21 @@
+MAVCONN - MICRO AIR VEHICLE MIDDLEWARE
+
+MAVConn is optimized for low-latency, high-speed communication. It scales from
+miniature platforms like an OMAP3530-driven Gumstix Overo to an Intel Core 2 DUO 1.86 GHz
+single board computer. In can run on Ubuntu Linux, OpenEmbedded and Mac OS X.
+
+MAVConn is using LCM as primary communication channel, with MAVLink as message
+format. This allows to directly interface MAVConn to autopilot and inertial
+measurement units. MAVConn can be connected via UDP/Wifi or a radio modem to
+the QGroundControl Operator Control Unit.
+
+Building MAVConn is quick and easy, only very few external libraries are needed.
+
+Installation instructions:
+http://pixhawk.ethz.ch/wiki/software/mavconn/
+
+More Information:
+http://pixhawk.ethz.ch/wiki/software/middleware/
+
+Operator Control Unit:
+http://www.qgroundcontrol.org
