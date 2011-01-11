@@ -11,10 +11,10 @@ the QGroundControl Operator Control Unit.
 
 Building MAVConn is quick and easy, only very few external libraries are needed.
 
-Installation instructions:
+Installation Instructions:
 http://pixhawk.ethz.ch/wiki/software/mavconn/
 
-More Information:
+Detailed Architecture / System Information:
 http://pixhawk.ethz.ch/wiki/software/middleware/
 
 Operator Control Unit:
