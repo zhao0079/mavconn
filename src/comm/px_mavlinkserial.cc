@@ -148,7 +148,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			}
 		}
 
-		if (pc2serial && msg->sysid == sysid && (
+		if (pc2serial && msg->sysid == systemid && (
 			   msg->msgid == MAVLINK_MSG_ID_WAYPOINT
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_ACK
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CLEAR_ALL
