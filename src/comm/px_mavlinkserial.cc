@@ -148,7 +148,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			}
 		}
 
-		if (pc2serial && msg->sysid != 127 && (
+		if (pc2serial && msg->sysid == sysid && (
 			   msg->msgid == MAVLINK_MSG_ID_WAYPOINT
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_ACK
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CLEAR_ALL
@@ -163,7 +163,13 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			/*|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION*/
 			/*|| msg->msgid == MAVLINK_MSG_ID_ATTITUDE*/
 			|| msg->msgid == MAVLINK_MSG_ID_PARAM_VALUE
-			|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT))
+			|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT
+			|| msg->msgid == MAVLINK_MSG_ID_ACTION_ACK
+			|| msg->msgid == MAVLINK_MSG_ID_SYS_STATUS
+			|| msg->msgid == MAVLINK_MSG_ID_SYSTEM_TIME
+			|| msg->msgid == MAVLINK_MSG_ID_AUX_STATUS
+			|| msg->msgid == MAVLINK_MSG_ID_BOOT
+			|| msg->msgid == MAVLINK_MSG_ID_CONTROL_STATUS))
 		{
 			if (verbose || debug)
 					std::cout << std::dec
