@@ -82,6 +82,7 @@ bool verbose;             ///< Enable verbose output
 bool emitHeartbeat;       ///< Generate a heartbeat with this process
 bool debug;               ///< Enable debug functions and output
 bool test;                ///< Enable test mode
+bool pc2serial;			  ///< Enable PC to serial push mode (send more stuff from pc over serial)
 
 lcm_t* lcm;               ///< Reference to LCM bus
 
@@ -113,21 +114,32 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			//if (msg->msgid != MAVLINK_MSG_ID_DEBUG && msg->msgid != MAVLINK_MSG_ID_STATUSTEXT && msg->msgid != MAVLINK_MSG_ID_SYSTEM_TIME && msg->msgid != MAVLINK_MSG_ID_DEBUG_VECT)
 
 			// Only send messages which are in positiv list. This list contains all messages handled by IMU
-			if (msg->msgid == MAVLINK_MSG_ID_SET_MODE || msg->msgid
-					== MAVLINK_MSG_ID_ACTION || msg->msgid
-					== MAVLINK_MSG_ID_SYSTEM_TIME || msg->msgid
-					== MAVLINK_MSG_ID_REQUEST_DATA_STREAM || msg->msgid
-					== MAVLINK_MSG_ID_PARAM_REQUEST_LIST || msg->msgid
-					== MAVLINK_MSG_ID_PARAM_SET || msg->msgid
-					== MAVLINK_MSG_ID_POSITION_CONTROL_SETPOINT_SET
+			if (       msg->msgid == MAVLINK_MSG_ID_SET_MODE
+					|| msg->msgid == MAVLINK_MSG_ID_ACTION
+					|| msg->msgid == MAVLINK_MSG_ID_SYSTEM_TIME
+					|| msg->msgid == MAVLINK_MSG_ID_REQUEST_DATA_STREAM
+					|| msg->msgid == MAVLINK_MSG_ID_PARAM_REQUEST_LIST
+					|| msg->msgid == MAVLINK_MSG_ID_PARAM_SET
+					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_SETPOINT_SET
 					|| msg->msgid == MAVLINK_MSG_ID_SET_CAM_SHUTTER
 					|| msg->msgid == MAVLINK_MSG_ID_IMAGE_TRIGGER_CONTROL
 					|| msg->msgid == MAVLINK_MSG_ID_VISION_POSITION_ESTIMATE
 					|| msg->msgid == MAVLINK_MSG_ID_PING
 					|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT
-					|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION_SETPOINT_SET || msg->msgid
-					== MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE
-					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_OFFSET_SET) {
+					|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION_SETPOINT_SET
+					|| msg->msgid == MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE
+					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_OFFSET_SET
+					|| pc2serial && (
+					   msg->msgid == MAVLINK_MSG_ID_WAYPOINT
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_ACK
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CLEAR_ALL
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_COUNT
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CURRENT
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REACHED
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST_LIST
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_CURRENT
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE)) {
 				if (verbose || debug)
 					std::cout << std::dec
 							<< "Received and forwarded LCM message with id "
@@ -464,6 +476,7 @@ int main(int argc, char* argv[])
 																											("silent,s", config::bool_switch(&silent)->default_value(false), "surpress outputs")
 																											("verbose,v", config::bool_switch(&verbose)->default_value(false), "verbose output")
 																											("debug,d", config::bool_switch(&debug)->default_value(false), "Emit debug information")
+																											("pc2serial", config::bool_switch(&pc2serial)->default_value(false), "Send more status information from PC over serial (for second XBee mode)")
 																											;
 	config::variables_map vm;
 	config::store(config::parse_command_line(argc, argv, desc), vm);
