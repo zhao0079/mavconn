@@ -107,7 +107,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 	else
 	{
 		//If msg not from system or not from IMU
-		if (msg->sysid != systemid || msg->compid != MAV_COMP_ID_IMU)
+		if (!pc2serial && (msg->sysid != systemid || msg->compid != MAV_COMP_ID_IMU))
 		{
 			// Filter out debug messages
 			//
@@ -129,18 +129,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 					|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT
 					|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION_SETPOINT_SET
 					|| msg->msgid == MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE
-					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_OFFSET_SET
-					|| (pc2serial && msg->sysid != 127 && (
-					   msg->msgid == MAVLINK_MSG_ID_WAYPOINT
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_ACK
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CLEAR_ALL
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_COUNT
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CURRENT
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REACHED
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST_LIST
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_CURRENT
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE))) {
+					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_OFFSET_SET) {
 				if (verbose || debug)
 					std::cout << std::dec
 							<< "Received and forwarded LCM message with id "
@@ -157,6 +146,40 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 				tcflush(fd, TCOFLUSH);
 				if (messageLength != written) fprintf(stderr, "ERROR: Wrote %d bytes but should have written %d\n", written, messageLength);
 			}
+		}
+
+		if (pc2serial && msg->sysid != 127 && (
+			   msg->msgid == MAVLINK_MSG_ID_WAYPOINT
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_ACK
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CLEAR_ALL
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_COUNT
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CURRENT
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REACHED
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST_LIST
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_CURRENT
+			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE
+			|| msg->msgid == MAVLINK_MSG_ID_HEARTBEAT
+			|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION
+			|| msg->msgid == MAVLINK_MSG_ID_ATTITUDE
+			|| msg->msgid == MAVLINK_MSG_ID_PARAM_VALUE
+			|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT))
+		{
+			if (verbose || debug)
+					std::cout << std::dec
+							<< "Received and forwarded LCM message with id "
+							<< static_cast<unsigned int> (msg->msgid)
+							<< " from system " << static_cast<int> (msg->sysid)
+							<< std::endl;
+
+				// Send message over serial port
+				uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+				int messageLength = mavlink_msg_to_send_buffer(buffer, msg);
+				if (debug) printf("Writing %d bytes\n", messageLength);
+				int written = write(fd, (char*)buffer, messageLength);
+				//ioctl(fd, TIOCFLUSH, FWRITE);
+				tcflush(fd, TCOFLUSH);
+				if (messageLength != written) fprintf(stderr, "ERROR: Wrote %d bytes but should have written %d\n", written, messageLength);
 		}
 
 		if (msg->msgid == MAVLINK_MSG_ID_PING)
