@@ -107,7 +107,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 	else
 	{
 		//If msg not from system or not from IMU
-		if ((msg->sysid != systemid || msg->compid != MAV_COMP_ID_IMU))
+		if (msg->sysid != systemid || msg->compid != MAV_COMP_ID_IMU)
 		{
 			// Filter out debug messages
 			//
@@ -115,6 +115,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 
 			// Only send messages which are in positiv list. This list contains all messages handled by IMU
 			if (       msg->msgid == MAVLINK_MSG_ID_SET_MODE
+					|| msg->msgid == MAVLINK_MSG_ID_HEARTBEAT
 					|| msg->msgid == MAVLINK_MSG_ID_ACTION
 					|| msg->msgid == MAVLINK_MSG_ID_SYSTEM_TIME
 					|| msg->msgid == MAVLINK_MSG_ID_REQUEST_DATA_STREAM
@@ -129,7 +130,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 					|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION_SETPOINT_SET
 					|| msg->msgid == MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE
 					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_OFFSET_SET
-					|| pc2serial && (
+					|| (pc2serial && msg->sysid != 127 && (
 					   msg->msgid == MAVLINK_MSG_ID_WAYPOINT
 					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_ACK
 					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_CLEAR_ALL
@@ -139,7 +140,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST
 					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_REQUEST_LIST
 					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_CURRENT
-					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE)) {
+					|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE))) {
 				if (verbose || debug)
 					std::cout << std::dec
 							<< "Received and forwarded LCM message with id "
