@@ -160,8 +160,6 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_CURRENT
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE
 			|| msg->msgid == MAVLINK_MSG_ID_HEARTBEAT
-			/*|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION*/
-			/*|| msg->msgid == MAVLINK_MSG_ID_ATTITUDE*/
 			|| msg->msgid == MAVLINK_MSG_ID_PARAM_VALUE
 			|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT
 			|| msg->msgid == MAVLINK_MSG_ID_ACTION_ACK
@@ -169,7 +167,14 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			|| msg->msgid == MAVLINK_MSG_ID_SYSTEM_TIME
 			|| msg->msgid == MAVLINK_MSG_ID_AUX_STATUS
 			|| msg->msgid == MAVLINK_MSG_ID_BOOT
-			|| msg->msgid == MAVLINK_MSG_ID_CONTROL_STATUS))
+			|| msg->msgid == MAVLINK_MSG_ID_CONTROL_STATUS
+			|| msg->msgid == MAVLINK_MSG_ID_DEBUG
+			|| msg->msgid == MAVLINK_MSG_ID_DEBUG_VECT
+			|| msg->msgid == MAVLINK_MSG_ID_GPS_STATUS
+			|| msg->msgid == MAVLINK_MSG_ID_GLOBAL_POSITION
+			|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION
+			|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION_SETPOINT
+			|| msg->msgid == MAVLINK_MSG_ID_ATTITUDE))
 		{
 			if (verbose || debug)
 					std::cout << std::dec
