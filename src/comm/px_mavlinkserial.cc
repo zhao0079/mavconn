@@ -160,8 +160,8 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_CURRENT
 			|| msg->msgid == MAVLINK_MSG_ID_WAYPOINT_SET_GLOBAL_REFERENCE
 			|| msg->msgid == MAVLINK_MSG_ID_HEARTBEAT
-			|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION
-			|| msg->msgid == MAVLINK_MSG_ID_ATTITUDE
+			/*|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION*/
+			/*|| msg->msgid == MAVLINK_MSG_ID_ATTITUDE*/
 			|| msg->msgid == MAVLINK_MSG_ID_PARAM_VALUE
 			|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT))
 		{
