@@ -650,6 +650,20 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 
 						send_waypoint_request(protocol_current_partner_systemid, protocol_current_partner_compid, protocol_current_wp_id);
 					}
+					else if (wpc.count == 0)
+					{
+						printf("got waypoint count of 0, clearing waypoint list and staying in state PX_WPP_IDLE\n");
+						while(waypoints_receive_buffer->size() > 0)
+						{
+							delete waypoints->back();
+							waypoints->pop_back();
+						}
+						current_active_wp_id = -1;
+						yawReached = false;
+						posReached = false;
+						break;
+
+					}
 					else
 					{
 						if (verbose) printf("Ignoring MAVLINK_MSG_ID_WAYPOINT_COUNT from %u with count of %u\n", msg->sysid, wpc.count);
@@ -792,6 +806,8 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 					waypoints->pop_back();
 				}
 				current_active_wp_id = -1;
+				yawReached = false;
+				posReached = false;
 			}
 			else if (wpca.target_system == systemid && wpca.target_component == compid && current_state != PX_WPP_IDLE)
 			{
@@ -847,7 +863,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 					send_setpoint(current_active_wp_id);
 					waypoints->at(current_active_wp_id)->current = true;
 					posReached = false;
-					//yawReached = false;
+					yawReached = false;
 					if (verbose) printf("Set new waypoint (%u)\n", current_active_wp_id);
 				}
 			}
