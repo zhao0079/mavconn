@@ -27,7 +27,6 @@ PIXHAWK_LINK_LIBRARIES(px_mavlink_bridge_serial
 PIXHAWK_EXECUTABLE(px_mavlink_bridge_udp px_udplink.cc)
 PIXHAWK_LINK_LIBRARIES(px_mavlink_bridge_udp
   mavconn_lcm
-  ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 PIXHAWK_EXECUTABLE_CONDITIONAL(px_gpsd CONDITION GPS_FOUND FILES px_gpsd.cc)

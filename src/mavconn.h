@@ -38,6 +38,9 @@ This file is part of the MAVCONN project
 #define _MAVCONN_H_
 
 #include <cmath>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 // MAVLINK message format includes
 #include <mavlink.h>
@@ -97,7 +100,34 @@ static inline uint64_t getSystemTimeUsecs()
 // FIXME
 static inline int getSystemID(void)
 {
-	return 42;
+	static bool isCached = false;
+	// Return 42 on error or no config file present
+	static int systemId = 42;
+
+	if (!isCached)
+	{
+		// Read config file
+		std::string line;
+		std::ifstream configFile("/etc/mavconn/mavconn.conf");
+		if (configFile.is_open())
+		{
+			while (configFile.good())
+			{
+				std::string key;
+				int value;
+				configFile >> key;
+				configFile >> value;
+
+				if (value > 0 && value < 256)
+				{
+					systemId = value;
+				}
+			}
+		}
+
+	}
+
+	return systemId;
 }
 
 // FIXME: Camera struct is a little large currently

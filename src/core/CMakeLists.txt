@@ -12,7 +12,6 @@ INCLUDE_DIRECTORIES(
 PIXHAWK_EXECUTABLE(px_system_control px_core.cc)
 PIXHAWK_LINK_LIBRARIES(px_system_control
   mavconn_lcm
-  ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${GLIBTOP_LIBRARY}
 )
 
