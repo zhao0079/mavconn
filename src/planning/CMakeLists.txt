@@ -4,10 +4,9 @@ INCLUDE_DIRECTORIES(
   ${GTHREAD2_MAIN_INCLUDE_DIR}
 )
 
-#PIXHAWK_EXECUTABLE(px_waypointplanner px_waypointplanner.cc)
-#PIXHAWK_LINK_LIBRARIES(px_waypointplanner
-#  ${CXCORE_LIBRARY}
-#  mavconn_lcm
-#  corelib
-#${Boost_PROGRAM_OPTIONS_LIBRARY}
-#)
+PIXHAWK_EXECUTABLE(px_waypointplanner px_waypointplanner.cc)
+PIXHAWK_LINK_LIBRARIES(px_waypointplanner
+  ${CXCORE_LIBRARY}
+  mavconn_lcm
+  ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
