@@ -74,7 +74,7 @@ struct timeval tv;		  ///< System time
 int baud;                 ///< The serial baud rate
 
 // Settings
-int systemid;             ///< The unique system id of this MAV, 0-127. Has to be consistent across the system
+int systemid = getSystemID();             ///< The unique system id of this MAV, 0-127. Has to be consistent across the system
 int compid = PX_COMP_ID_MAVLINK_BRIDGE_SERIAL;
 string port;              ///< The serial port name, e.g. /dev/ttyUSB0
 bool silent;              ///< Wether console output should be enabled
@@ -504,7 +504,7 @@ int main(int argc, char* argv[])
 	config::options_description desc("Allowed options");
 	desc.add_options()
 																											("help", "produce help message")
-																											("sysid,a", config::value<int>(&systemid)->default_value(42), "ID of this system, 1-127")
+																											("sysid,a", config::value<int>(&systemid)->default_value(systemid), "ID of this system, 1-127")
 																											("heartbeat,h", config::bool_switch(&emitHeartbeat)->default_value(false), "send heartbeat signals")
 																											("port,p", config::value<string>(&port)->default_value("/dev/ttyUSB0"), "serial port, e.g. /dev/ttyUSB0")
 																											("baud,b", config::value<int>(&baud)->default_value(115200), "serial baud rate, e.g. 115200")
@@ -614,7 +614,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Ready to roll
-	printf("MAVLINK_BRIDGE_SERIAL INITIALIZATION DONE, RUNNING..\n");
+	printf("\nPX SYSTEM CONTROL STARTED ON MAV %d (COMPONENT ID:%d) - RUNNING..\n\n", systemid, compid);
 
 	// Write timestamp to serial port from time to time (every 2 seconds)
 	uint64_t lastTime = 0;

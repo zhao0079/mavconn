@@ -31,7 +31,7 @@ This file is part of the MAVCONN project
  */
 
 // BOOST includes
-#include <boost/program_options.hpp>
+
 #include <cstdio>
 #include <iostream>
 #include <glib.h>
@@ -51,7 +51,6 @@ This file is part of the MAVCONN project
 // Timer for benchmarking
 struct timeval tv;
 
-namespace config = boost::program_options;
 using std::string;
 using namespace std;
 
@@ -61,15 +60,15 @@ using namespace std;
 enum COMM_STATE
 {
 	COMM_STATE_UNINIT=0,
-			COMM_STATE_BOOT,
-			COMM_STATE_READY,
-			COMM_STATE_GCS_ESTABLISHED
+	COMM_STATE_BOOT,
+	COMM_STATE_READY,
+	COMM_STATE_GCS_ESTABLISHED
 };
 
 enum COMPONENT_STATE
 {
 	CMP_STATE_UNINIT=0,
-			CMP_STATE_OK
+	CMP_STATE_OK
 };
 
 typedef struct
@@ -92,14 +91,13 @@ system_state_t static inline mk_system_state_t()
 
 
 // Settings
-int systemid;					///< The unique system id of this MAV, 0-255. Has to be consistent across the system
-int compid = PX_COMP_ID_CORE;	///< The unique component id of this process.
-int systemType = MAV_QUADROTOR;	///< The system type
-bool silent;					///< Wether console output should be enabled
-bool verbose;					///< Enable verbose output
-bool emitHeartbeat;				///< Generate a heartbeat with this process
-bool debug;						///< Enable debug functions and output
-std::string configFile;			///< Configuration file for parameters
+int systemid = getSystemID();		///< The unique system id of this MAV, 0-255. Has to be consistent across the system
+int compid = MAV_COMP_ID_SYSTEM_CONTROL;		///< The unique component id of this process.
+int systemType = MAV_QUADROTOR;		///< The system type
+bool silent = false;				///< Wether console output should be enabled
+bool verbose = false;				///< Enable verbose output
+bool emitHeartbeat = false;			///< Generate a heartbeat with this process
+bool debug = false;					///< Enable debug functions and output
 
 uint64_t currTime;
 uint64_t lastTime;
@@ -185,7 +183,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,co
 }
 
 void* lcm_wait(void* lcm_ptr)
-		{
+				{
 	lcm_t* lcm = (lcm_t*) lcm_ptr;
 	// Blocking wait for new data
 	while (1)
@@ -193,160 +191,155 @@ void* lcm_wait(void* lcm_ptr)
 		lcm_handle (lcm);
 	}
 	return NULL;
-		}
+				}
 
 int main (int argc, char ** argv)
 {
-	try
+	// Handling Program options
+	static GOptionEntry entries[] =
 	{
-		// Handling Program options
+			{ "sysid", 'a', 0, G_OPTION_ARG_INT, &systemid, "ID of this system", NULL },
+			{ "compid", 'c', 0, G_OPTION_ARG_INT, &compid, "ID of this component", NULL },
+			{ "heartbeat", NULL, 0, G_OPTION_ARG_NONE, &emitHeartbeat, "Emit Heartbeat", (emitHeartbeat) ? "on" : "off" },
+			{ "silent", 's', 0, G_OPTION_ARG_NONE, &silent, "Be silent", NULL },
+			{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
+			{ "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Debug mode, changes behaviour", NULL },
+			{ NULL }
+	};
 
-		config::options_description desc("Allowed options");
-		desc.add_options()
-								("help", "produce help message")
-								("acid,a", config::value<int>(&systemid)->default_value(42), "ID of this system, 1-127")
-								("heartbeat,h", config::bool_switch(&emitHeartbeat)->default_value(true), "send heartbeat signals")
-								("silent,s", config::bool_switch(&silent)->default_value(false), "surpress outputs")
-								("verbose,v", config::bool_switch(&verbose)->default_value(false), "verbose output")
-								("debug,d", config::bool_switch(&debug)->default_value(false), "Output debug messages to console")
-								("config,c", config::value<std::string>(&configFile)->default_value("config/parameters_core.cfg"), "Config file for system parameters")
-								;
-		config::variables_map vm;
-		config::store(config::parse_command_line(argc, argv, desc), vm);
-		config::notify(vm);
+	GError *error = NULL;
+	GOptionContext *context;
 
-		if (vm.count("help"))
+	context = g_option_context_new ("- translate between LCM broadcast bus and ground control link");
+	g_option_context_add_main_entries (context, entries, NULL);
+	//g_option_context_add_group (context, NULL);
+	if (!g_option_context_parse (context, &argc, &argv, &error))
+	{
+		g_print ("Option parsing failed: %s\n", error->message);
+		exit (1);
+	}
+
+	lcm_t * lcm;
+
+	lcm = lcm_create ("udpm://");
+	if (!lcm)
+		return 1;
+
+	// Initialize parameter client before subscribing (and receiving) MAVLINK messages
+//	paramClient = new PxParamClient(systemid, compid, lcm, "px_system_control.cfg", verbose);
+//	paramClient->setParamValue("SYS_ID", systemid);
+//	paramClient->readParamsFromFile("px_system_control.cfg");
+
+	mavlink_message_t_subscription_t * commSub =
+			mavlink_message_t_subscribe (lcm, "MAVLINK", &mavlink_handler, lcm);
+
+	// Thread
+	GThread* lcm_thread;
+	GError* err;
+
+	if( !g_thread_supported() )
+	{
+		g_thread_init(NULL);
+		// Only initialize g thread if not already done
+	}
+
+	if( (lcm_thread = g_thread_create((GThreadFunc)lcm_wait, (void *)lcm, TRUE, &err)) == NULL)
+	{
+		printf("Thread create failed: %s!!\n", err->message );
+		g_error_free ( err ) ;
+	}
+
+	// Initialize system information library
+	glibtop_init();
+
+	glibtop_cpu cpu;
+	glibtop_mem memory;
+	glibtop_proclist proclist;
+
+	printf("\nPX SYSTEM CONTROL STARTED ON MAV %d (COMPONENT ID:%d) - RUNNING..\n\n", systemid, compid);
+
+	while (1)
+	{
+
+		// Send heartbeat if enabled
+		if (emitHeartbeat)
 		{
-			std::cout << desc << std::endl;
-			return 1;
-		}
+			gettimeofday(&tv, NULL);
+			uint64_t currTime =  ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
 
-		lcm_t * lcm;
-
-		lcm = lcm_create ("udpm://");
-		if (!lcm)
-			return 1;
-
-		// Initialize parameter client before subscribing (and receiving) MAVLINK messages
-		paramClient = new PxParamClient(systemid, compid, lcm, configFile, verbose);
-		paramClient->setParamValue("SYS_ID", systemid);
-		paramClient->readParamsFromFile(configFile);
-
-		mavlink_message_t_subscription_t * commSub =
-				mavlink_message_t_subscribe (lcm, "MAVLINK", &mavlink_handler, lcm);
-
-		// Thread
-		GThread* lcm_thread;
-		GError* err;
-
-		if( !g_thread_supported() )
-		{
-			g_thread_init(NULL);
-			// Only initialize g thread if not already done
-		}
-
-		if( (lcm_thread = g_thread_create((GThreadFunc)lcm_wait, (void *)lcm, TRUE, &err)) == NULL)
-		{
-			printf("Thread create failed: %s!!\n", err->message );
-			g_error_free ( err ) ;
-		}
-
-		// Initialize system information library
-		glibtop_init();
-
-		glibtop_cpu cpu;
-		glibtop_mem memory;
-		glibtop_proclist proclist;
-
-		printf("\nPX CORE STARTED\n");
-
-		while (1)
-		{
-
-			// Send heartbeat if enabled
-			if (emitHeartbeat)
+			if (currTime - lastTime > 1000000)
 			{
-				gettimeofday(&tv, NULL);
-				uint64_t currTime =  ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
+				// SEND OUT TIME MESSAGE
+				// send message as close to time aquisition as possible
+				mavlink_message_t msg;
 
-				if (currTime - lastTime > 1000000)
+				mavlink_msg_system_time_pack(systemid, compid, &msg, currTime);
+				mavlink_message_t_publish (lcm, "MAVLINK", &msg);
+
+				lastTime = currTime;
+				if (verbose) std::cout << "Emitting heartbeat" << std::endl;
+
+				// SEND HEARTBEAT
+
+				// Pack message and get size of encoded byte string
+				mavlink_msg_heartbeat_pack(systemid, compid, &msg, systemType, MAV_AUTOPILOT_PIXHAWK);
+				mavlink_message_t_publish (lcm, "MAVLINK", &msg);
+
+				// GET SYSTEM INFORMATION
+				glibtop_get_cpu (&cpu);
+				glibtop_get_mem(&memory);
+
+				if (verbose)
 				{
-					// SEND OUT TIME MESSAGE
-					// send message as close to time aquisition as possible
-					mavlink_message_t msg;
+					printf("CPU TYPE INFORMATIONS \n\n"
+							"Cpu Total : %ld \n"
+							"Cpu User : %ld \n"
+							"Cpu Nice : %ld \n"
+							"Cpu Sys : %ld \n"
+							"Cpu Idle : %ld \n"
+							"Cpu Frequences : %ld \n",
+							(unsigned long)cpu.total,
+							(unsigned long)cpu.user,
+							(unsigned long)cpu.nice,
+							(unsigned long)cpu.sys,
+							(unsigned long)cpu.idle,
+							(unsigned long)cpu.frequency);
 
-					mavlink_msg_system_time_pack(systemid, compid, &msg, currTime);
-					mavlink_message_t_publish (lcm, "MAVLINK", &msg);
+					float load = ((float)(unsigned long)cpu.total-(float)(unsigned long)cpu.idle) / (float)(unsigned long)cpu.total;
+					printf("\nLOAD: %f %%\n\n", load*100.0f);
 
-					lastTime = currTime;
-					if (verbose) std::cout << "Emitting heartbeat" << std::endl;
+					printf("\nMEMORY USING\n\n"
+							"Memory Total : %ld MB\n"
+							"Memory Used : %ld MB\n"
+							"Memory Free : %ld MB\n"
+							"Memory Shared: %ld MB\n"
+							"Memory Buffered : %ld MB\n"
+							"Memory Cached : %ld MB\n"
+							"Memory user : %ld MB\n"
+							"Memory Locked : %ld MB\n",
+							(unsigned long)memory.total/(1024*1024),
+							(unsigned long)memory.used/(1024*1024),
+							(unsigned long)memory.free/(1024*1024),
+							(unsigned long)memory.shared/(1024*1024),
+							(unsigned long)memory.buffer/(1024*1024),
+							(unsigned long)memory.cached/(1024*1024),
+							(unsigned long)memory.user/(1024*1024),
+							(unsigned long)memory.locked/(1024*1024));
 
-					// SEND HEARTBEAT
-
-					// Pack message and get size of encoded byte string
-					mavlink_msg_heartbeat_pack(systemid, compid, &msg, systemType, MAV_AUTOPILOT_PIXHAWK);
-					mavlink_message_t_publish (lcm, "MAVLINK", &msg);
-
-					// GET SYSTEM INFORMATION
-					glibtop_get_cpu (&cpu);
-					glibtop_get_mem(&memory);
-
-					if (verbose)
-					{
-						printf("CPU TYPE INFORMATIONS \n\n"
-						"Cpu Total : %ld \n"
-						"Cpu User : %ld \n"
-						"Cpu Nice : %ld \n"
-						"Cpu Sys : %ld \n"
-						"Cpu Idle : %ld \n"
-						"Cpu Frequences : %ld \n",
-						(unsigned long)cpu.total,
-						(unsigned long)cpu.user,
-						(unsigned long)cpu.nice,
-						(unsigned long)cpu.sys,
-						(unsigned long)cpu.idle,
-						(unsigned long)cpu.frequency);
-
-						float load = ((float)(unsigned long)cpu.total-(float)(unsigned long)cpu.idle) / (float)(unsigned long)cpu.total;
-						printf("\nLOAD: %f %%\n\n", load*100.0f);
-
-						printf("\nMEMORY USING\n\n"
-						"Memory Total : %ld MB\n"
-						"Memory Used : %ld MB\n"
-						"Memory Free : %ld MB\n"
-						"Memory Shared: %ld MB\n"
-						"Memory Buffered : %ld MB\n"
-						"Memory Cached : %ld MB\n"
-						"Memory user : %ld MB\n"
-						"Memory Locked : %ld MB\n",
-						(unsigned long)memory.total/(1024*1024),
-						(unsigned long)memory.used/(1024*1024),
-						(unsigned long)memory.free/(1024*1024),
-						(unsigned long)memory.shared/(1024*1024),
-						(unsigned long)memory.buffer/(1024*1024),
-						(unsigned long)memory.cached/(1024*1024),
-						(unsigned long)memory.user/(1024*1024),
-						(unsigned long)memory.locked/(1024*1024));
-
-						int which = 0, arg = 0;
-						glibtop_get_proclist(&proclist,which,arg);
-						printf("%ld\n%ld\n%ld\n",
-						(unsigned long)proclist.number,
-						(unsigned long)proclist.total,
-						(unsigned long)proclist.size);
-					}
+					int which = 0, arg = 0;
+					glibtop_get_proclist(&proclist,which,arg);
+					printf("%ld\n%ld\n%ld\n",
+							(unsigned long)proclist.number,
+							(unsigned long)proclist.total,
+							(unsigned long)proclist.size);
 				}
 			}
-			usleep(5000);
 		}
+		usleep(5000);
+	}
 
-		mavlink_message_t_unsubscribe (lcm, commSub);
-		lcm_destroy (lcm);
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
+	mavlink_message_t_unsubscribe (lcm, commSub);
+	lcm_destroy (lcm);
 
 	return 0;
 }

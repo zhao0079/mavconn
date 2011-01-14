@@ -55,15 +55,16 @@
 #include <time.h>
 #endif
 #include <glib.h>
-#include <cxtypes.h>
 #include "mavconn.h"
 
 // Settings
-int systemid;
-int componentid;
+int systemid = getSystemID();
+int componentid = MAV_COMP_ID_UDP_BRIDGE;
 uint8_t mode;
-std::string host = "localhost"; ///< host name for UDP server
-std::string port = "14550"; ///< port for UDP server to open connection
+
+static GString* host = g_string_new("localhost");	///< host name for UDP server
+static GString* port = g_string_new("14550");		///< port for UDP server to open connection
+
 bool silent; ///< silent run mode
 bool verbose; ///< verbose run mode
 bool emitHeartbeat; ///< tells the program to emit heart beats regularly
@@ -120,11 +121,11 @@ static void mavlink_handler(const lcm_recv_buf_t *rbuf, const char * channel,
 	{
 		// Error handling
 		perror("Could not send over UDP socket");
-		fprintf(stderr, "Target address and host: %s:%s\n", host.c_str(), port.c_str());
+		fprintf(stderr, "Target address and host: %s:%s\n", host->str, port->str);
 	}
 	else
 	{
-		if (debug) fprintf(stderr, "SENT %d BYTES OVER UDP TO %s:%s", bytes_sent, host.c_str(), port.c_str());
+		if (debug) fprintf(stderr, "SENT %d BYTES OVER UDP TO %s:%s", bytes_sent, host->str, port->str);
 	}
 }
 
@@ -160,7 +161,7 @@ void* udp_wait(void* lcm_ptr)
 
 		for (int i = 0; i < recsize; ++i)
 		{
-			uchar tmpchar = buf[i];
+			unsigned char tmpchar = buf[i];
 			if (debug) printf("%02x ", tmpchar);
 			if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &msg, &status))
 			{
@@ -185,8 +186,8 @@ int main(int argc, char* argv[])
 	{
 			{ "sysid", 'a', 0, G_OPTION_ARG_INT, &systemid, "ID of this system", NULL },
 			{ "compid", 'c', 0, G_OPTION_ARG_INT, &componentid, "ID of this component", NULL },
-			{ "host", 'r', 0, G_OPTION_ARG_STRING, &host, "Remote host", "hostname" },
-			{ "port", 'p', 0, G_OPTION_ARG_STRING, &port, "Remote port", "port, 14550" },
+			{ "host", 'r', 0, G_OPTION_ARG_STRING, host, "Remote host", host->str },
+			{ "port", 'p', 0, G_OPTION_ARG_STRING, port, "Remote port", port->str },
 			{ "silent", 's', 0, G_OPTION_ARG_NONE, &silent, "Be silent", NULL },
 			{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
 			{ "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Debug mode, changes behaviour", NULL },
@@ -208,7 +209,7 @@ int main(int argc, char* argv[])
 	// Handling program options done
 
 	// Print the basic configuration
-	printf("Connecting to host %s:%s\n", host.c_str(), port.c_str());
+	printf("Connecting to host %s:%s\n", host->str, port->str);
 
 	//		sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	//		struct sockaddr_in gcAddr;
@@ -239,11 +240,11 @@ int main(int argc, char* argv[])
 	//    }
 
 	// Get internet address for hostname
-	struct hostent *hp = gethostbyname(host.c_str());
+	struct hostent *hp = gethostbyname(host->str);
 
 	if (hp == NULL)
 	{
-		fprintf(stderr,"Unknown remote host address: %s, please check spelling.\n", host.c_str());
+		fprintf(stderr,"Unknown remote host address: %s, please check spelling.\n", host->str);
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -268,7 +269,7 @@ int main(int argc, char* argv[])
 	memset(&gcAddr, 0, sizeof(gcAddr));
 	gcAddr.sin_family = hp->h_addrtype;
 	gcAddr.sin_addr.s_addr = ((struct in_addr *)(hp->h_addr))->s_addr;//inet_addr("127.0.0.1");//inet_addr(host.c_str());
-	gcAddr.sin_port = htons(atoi(port.c_str()));
+	gcAddr.sin_port = htons(atoi(port->str));
 
 	lcm = lcm_create ("udpm://");
 	if (!lcm)
@@ -302,7 +303,7 @@ int main(int argc, char* argv[])
 		g_error_free ( err ) ;
 	}
 
-	printf("MAVLINK_BRIDGE_UDP INITIALIZATION DONE, RUNNING..\n");
+	printf("\nPX MAVLINK BRIDGE UDP STARTED ON MAV %d (COMPONENT ID:%d) - RUNNING..\n\n", systemid, componentid);
 
 	while (1)
 	{
