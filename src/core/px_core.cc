@@ -111,7 +111,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,co
 	if (debug) printf("Received message on channel \"%s\":\n", channel);
 
 	// Handle param messages
-	paramClient->handleMAVLinkPacket(msg);
+	//paramClient->handleMAVLinkPacket(msg);
 
 	switch(msg->msgid)
 	{
