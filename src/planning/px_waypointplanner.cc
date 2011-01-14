@@ -40,7 +40,7 @@ This file is part of the MAVCONN project
 #include <iostream>
 #include <vector>
 
-#include <PxVector3.h>
+#include "PxVector3.h"
 
 #include "mavconn.h"
 #include <glib.h>
@@ -853,7 +853,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel, c
 					}
 					else
 					{
-						if (current_active_wp_id + 1 < waypoints->size())
+						if ((uint16_t)(current_active_wp_id + 1) < waypoints->size())
 							current_active_wp_id++;
 					}
 
@@ -925,34 +925,76 @@ int main(int argc, char* argv[])
 			exit(1); // terminate with error
 		}
 
-        while (!wpfile.eof())
-        {
-        	mavlink_waypoint_t *wp = new mavlink_waypoint_t();
+		if (!wpfile.eof())
+		{
+			std::string check;
+//			int ver;
+//			bool good = false;
+//			wpfile >> check;
+//			if (!strcmp(check.c_str(),"QGC"))
+//			{
+//				wpfile >> check;
+//				if (!strcmp(check.c_str(),"WPL"))
+//				{
+//					wpfile >> ver;
+//					if (ver == 100)
+//					{
+//						char c = (char)wpfile.peek();
+//						if(c == '\r' || c == '\n')
+//						{
+//							good = true;
+//						}
+//					}
+//				}
+//			}
 
-        	int temp = 0;
+			printf("Loading waypoint file...\n");
 
-        	wpfile >> wp->seq;
-        	wpfile >> wp->x;
-			wpfile >> wp->y;
-			wpfile >> wp->z;
-			wpfile >> wp->yaw;
-			wpfile >> wp->autocontinue;
-			wpfile >> temp;
-			wp->current = temp;
-			wp->orbit = 0.f;
-			wpfile >> wp->param1;
-			wpfile >> wp->param2;
+			getline(wpfile,check);
 
-			char c = (char)wpfile.peek();
-			if(c != '\n')
+			printf("Version line: %s\n", check.c_str());
+
+			if(!strcmp(check.c_str(),"QGC WPL 100"))
 			{
-				delete wp;
-				break;
+				printf("Waypoint file version mismatch\n");
+				exit(1); // terminate with error
 			}
 
-        	wp->frame = 1;
-			waypoints->push_back(wp);
-        }
+			while (!wpfile.eof())
+			{
+				mavlink_waypoint_t *wp = new mavlink_waypoint_t();
+
+				uint16_t temp;
+
+				wpfile >> wp->seq;
+				wpfile >> temp; wp->frame = temp;
+				wpfile >> temp; wp->action = temp;
+				wpfile >> wp->orbit;
+				wpfile >> temp; wp->orbit_direction = temp;
+				wpfile >> wp->param1;
+				wpfile >> wp->param2;
+				wpfile >> temp; wp->current = temp;
+				wpfile >> wp->x;
+				wpfile >> wp->y;
+				wpfile >> wp->z;
+				wpfile >> wp->yaw;
+				wpfile >> temp; wp->autocontinue = temp;
+
+				char c = (char)wpfile.peek();
+				if(c != '\r' && c != '\n')
+				{
+					delete wp;
+					break;
+				}
+
+				printf("WP % 3u%s: Frame: %u\t Action: % 3u\tOrbit: % 6.2f\tOrbit-dir: %u\tparam1: % 6.2f\tparam2: % 7.2f\tX: % 7.2f\tY: % 7.2f\tZ: % 7.2f\tYaw: % 7.2f\tAuto-Cont: %u\t\n", wp->seq, (wp->current?"*":" "), wp->frame, wp->action, wp->orbit, wp->orbit_direction, wp->param1, wp->param2, wp->x, wp->y, wp->z, wp->yaw, wp->autocontinue);
+				waypoints->push_back(wp);
+			}
+		}
+		else
+		{
+			printf("Empty waypoint file!\n");
+		}
 		wpfile.close();
 
 		//get the new current waypoint
