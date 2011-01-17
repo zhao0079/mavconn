@@ -21,12 +21,16 @@ PIXHAWK_LINK_LIBRARIES(px_ping
 PIXHAWK_EXECUTABLE(px_mavlink_bridge_serial px_mavlinkserial.cc)
 PIXHAWK_LINK_LIBRARIES(px_mavlink_bridge_serial
   mavconn_lcm
+  ${GLIB2_LIBRARY}
+  ${GTHREAD2_LIBRARY}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 PIXHAWK_EXECUTABLE(px_mavlink_bridge_udp px_udplink.cc)
 PIXHAWK_LINK_LIBRARIES(px_mavlink_bridge_udp
   mavconn_lcm
+  ${GLIB2_LIBRARY}
+  ${GTHREAD2_LIBRARY}
 )
 
 PIXHAWK_EXECUTABLE_CONDITIONAL(px_gpsd CONDITION GPS_FOUND FILES px_gpsd.cc)
@@ -46,6 +50,8 @@ PIXHAWK_LINK_LIBRARIES(px_imagestreamer
   ${HIGHGUI_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
+  ${GLIB2_LIBRARY}
+  ${GTHREAD2_LIBRARY}
 )
 
 IF(VICON_FOUND)

@@ -31,19 +31,18 @@
  */
 
 /* POSIX Headers */
-#include <cstdio>
-#include <cerrno>
-#include <cstring>
-#include <cmath>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <math.h>
 #include <iostream>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include <cstdlib>
+#include <stdlib.h>
 #include <fcntl.h>
-#include <ctime>
 #include <errno.h>
 #include <netdb.h>
 #if (defined __QNX__) | (defined __QNXNTO__)
@@ -224,7 +223,7 @@ int main(int argc, char* argv[])
 	locAddr.sin_port = htons(0);//htons(14551);
 
 	/* Bind the socket to port 14551 - necessary to receive packets from qgroundcontrol */
-	if (-1 == bind(sock, (struct sockaddr *) &locAddr, sizeof(struct sockaddr)))
+	if ((int)-1 == bind(sock, (struct sockaddr *) &locAddr, sizeof(struct sockaddr)))
 	{
 		perror("error bind failed");
 		close(sock);
