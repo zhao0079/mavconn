@@ -206,6 +206,31 @@ public:
 		}
 	}
 
+	bool getGPS(const mavlink_message_t *msg, float *lat, float *lon, float *alt)
+	{
+		// Decode message
+		if (msg->msgid != MAVLINK_MSG_ID_IMAGE_AVAILABLE)
+		{
+			// Instantly return if MAVLink message did not contain an image
+			return false;
+		}
+		else
+		{
+			// Extract the image meta information and pointer location from the image
+			mavlink_image_available_t img;
+			mavlink_msg_image_available_decode(msg, &img);
+
+			if (lat)
+				*lat = img.lat;
+			if (lon)
+				*lon = img.lon;
+			if (alt)
+				*alt = img.alt;
+
+			return true;
+		}
+	}
+
 	bool sharedMemCopyImage(const mavlink_message_t* msg, cv::Mat& img)
 	{
 		IplImage iplImg = img;  // only header created, no data copied
