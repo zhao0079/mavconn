@@ -128,7 +128,6 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 					|| msg->msgid == MAVLINK_MSG_ID_PING
 					|| msg->msgid == MAVLINK_MSG_ID_STATUSTEXT
 					|| msg->msgid == MAVLINK_MSG_ID_LOCAL_POSITION_SETPOINT_SET
-					|| msg->msgid == MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE
 					|| msg->msgid == MAVLINK_MSG_ID_POSITION_CONTROL_OFFSET_SET) {
 				if (verbose || debug)
 					std::cout << std::dec
