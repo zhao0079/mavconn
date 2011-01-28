@@ -216,7 +216,7 @@ public:
 		shmdt(this->shm);
 	}
 
-	void sharedMemWriteKinectImage(const IplImage* colorframe, const IplImage* depthframe, uint64_t timestamp, float roll, float pitch, float yaw, float z, float lon, float lat, float alt, lcm_t* lcm)
+	void sharedMemWriteKinectImage(const IplImage* bayerframe, const IplImage* depthframe, uint64_t timestamp, float roll, float pitch, float yaw, float z, float lon, float lat, float alt, lcm_t* lcm)
 	{
 		// FIXME Calculate properly
 		struct timeval tv;
@@ -225,10 +225,10 @@ public:
 		uint64_t valid_until = now + (uint64_t)(100000);
 
 		// Get image metadata
-		char* colordata;
-		int colorstep;
-		CvSize colorimg_size;
-		cvGetRawData(colorframe, (uchar**)(&colordata), &colorstep, &colorimg_size);
+		char* bayerdata;
+		int bayerstep;
+		CvSize bayerimg_size;
+		cvGetRawData(bayerframe, (uchar**)(&bayerdata), &bayerstep, &bayerimg_size);
 		char* depthdata;
 		int depthstep;
 		CvSize depthimg_size;
@@ -252,10 +252,10 @@ public:
 		}
 
 		// Copy image raw data into shared memory
-		int colorsize = colorimg_size.width * colorimg_size.height * 3;
+		int bayersize = bayerimg_size.width * bayerimg_size.height;
 		int depthsize = depthimg_size.width * depthimg_size.height * 2;
-		memcpy(this->shm, colordata, colorsize);
-		memcpy(this->shm + colorsize, depthdata, depthsize);
+		memcpy(this->shm, bayerdata, bayersize);
+		memcpy(this->shm + bayersize, depthdata, depthsize);
 
 		// Send out data at 1 Hz
 		//sprintf(s, "Image #%d", img_seq);
