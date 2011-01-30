@@ -1,0 +1,10 @@
+struct virtual_scan_message_t
+{
+    int64_t utime;
+
+    float angular_resolution;
+    double origin[3];
+    int32_t num_rays;
+    int16_t ray_endpoints[num_rays][3];
+}
+

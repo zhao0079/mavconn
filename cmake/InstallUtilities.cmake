@@ -50,11 +50,11 @@ FUNCTION(PIXHAWK_INSTALL)
 
   SET(MAVCONNLCM_HEADERS
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/mavlink_message_t.h
+	${CMAKE_SOURCE_DIR}/src/comm/lcm/camera_image_message_t.h
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/gl_overlay_message_t.h
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/obstacle_map_message_t.h
 	${CMAKE_SOURCE_DIR}/src/comm/lcm/point_cloud_message_t.h
-	${CMAKE_SOURCE_DIR}/src/comm/lcm/texture_facet_t.h
-	${CMAKE_SOURCE_DIR}/src/comm/lcm/texture_map_message_t.h
+	${CMAKE_SOURCE_DIR}/src/comm/lcm/virtual_scan_message_t.h
   )
   INSTALL(FILES ${MAVCONNLCM_HEADERS} DESTINATION ${PIXHAWK_INCLUDE_INSTALL_PATH}/comm/lcm/)
 

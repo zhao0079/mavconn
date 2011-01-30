@@ -1,7 +1,0 @@
-struct texture_facet_t
-{
-    int64_t patch_idx;
-    int8_t facet_idx;
-    float tex_coords[8];
-    boolean labeled;
-}
