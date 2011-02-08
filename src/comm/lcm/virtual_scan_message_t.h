@@ -20,10 +20,16 @@ typedef struct _virtual_scan_message_t virtual_scan_message_t;
 struct _virtual_scan_message_t
 {
     int64_t    utime;
-    float      angular_resolution;
+    float      elevation_angle_min;
+    float      elevation_angle_max;
+    float      azimuth_angle_min;
+    float      azimuth_angle_max;
+    float      angle_increment;
+    int16_t    range_min;
+    int16_t    range_max;
     double     origin[3];
     int32_t    num_rays;
-    int16_t    **ray_endpoints;
+    int16_t    *ray_endpoints;
 };
  
 virtual_scan_message_t   *virtual_scan_message_t_copy(const virtual_scan_message_t *p);

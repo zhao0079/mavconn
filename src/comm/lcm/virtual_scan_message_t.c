@@ -20,9 +20,15 @@ int64_t __virtual_scan_message_t_hash_recursive(const __lcm_hash_ptr *p)
     const __lcm_hash_ptr cp = { p, (void*)__virtual_scan_message_t_get_hash };
     (void) cp;
  
-    int64_t hash = 0x800aed8bad997402LL
+    int64_t hash = 0x9f0bc7047f6ca9c7LL
          + __int64_t_hash_recursive(&cp)
          + __float_hash_recursive(&cp)
+         + __float_hash_recursive(&cp)
+         + __float_hash_recursive(&cp)
+         + __float_hash_recursive(&cp)
+         + __float_hash_recursive(&cp)
+         + __int16_t_hash_recursive(&cp)
+         + __int16_t_hash_recursive(&cp)
          + __double_hash_recursive(&cp)
          + __int32_t_hash_recursive(&cp)
          + __int16_t_hash_recursive(&cp)
@@ -50,7 +56,25 @@ int __virtual_scan_message_t_encode_array(void *buf, int offset, int maxlen, con
         thislen = __int64_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].utime), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
-        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].angular_resolution), 1);
+        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].elevation_angle_min), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].elevation_angle_max), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].azimuth_angle_min), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].azimuth_angle_max), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].angle_increment), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int16_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].range_min), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int16_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].range_max), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
         thislen = __double_encode_array(buf, offset + pos, maxlen - pos, p[element].origin, 3);
@@ -59,12 +83,8 @@ int __virtual_scan_message_t_encode_array(void *buf, int offset, int maxlen, con
         thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].num_rays), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
-        { int a;
-        for (a = 0; a < p[element].num_rays; a++) {
-            thislen = __int16_t_encode_array(buf, offset + pos, maxlen - pos, p[element].ray_endpoints[a], 3);
-            if (thislen < 0) return thislen; else pos += thislen;
-        }
-        }
+        thislen = __int16_t_encode_array(buf, offset + pos, maxlen - pos, p[element].ray_endpoints, p[element].num_rays);
+        if (thislen < 0) return thislen; else pos += thislen;
  
     }
     return pos;
@@ -91,17 +111,25 @@ int __virtual_scan_message_t_encoded_array_size(const virtual_scan_message_t *p,
  
         size += __int64_t_encoded_array_size(&(p[element].utime), 1);
  
-        size += __float_encoded_array_size(&(p[element].angular_resolution), 1);
+        size += __float_encoded_array_size(&(p[element].elevation_angle_min), 1);
+ 
+        size += __float_encoded_array_size(&(p[element].elevation_angle_max), 1);
+ 
+        size += __float_encoded_array_size(&(p[element].azimuth_angle_min), 1);
+ 
+        size += __float_encoded_array_size(&(p[element].azimuth_angle_max), 1);
+ 
+        size += __float_encoded_array_size(&(p[element].angle_increment), 1);
+ 
+        size += __int16_t_encoded_array_size(&(p[element].range_min), 1);
+ 
+        size += __int16_t_encoded_array_size(&(p[element].range_max), 1);
  
         size += __double_encoded_array_size(p[element].origin, 3);
  
         size += __int32_t_encoded_array_size(&(p[element].num_rays), 1);
  
-        { int a;
-        for (a = 0; a < p[element].num_rays; a++) {
-            size += __int16_t_encoded_array_size(p[element].ray_endpoints[a], 3);
-        }
-        }
+        size += __int16_t_encoded_array_size(p[element].ray_endpoints, p[element].num_rays);
  
     }
     return size;
@@ -121,7 +149,25 @@ int __virtual_scan_message_t_decode_array(const void *buf, int offset, int maxle
         thislen = __int64_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].utime), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
-        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].angular_resolution), 1);
+        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].elevation_angle_min), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].elevation_angle_max), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].azimuth_angle_min), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].azimuth_angle_max), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].angle_increment), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int16_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].range_min), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int16_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].range_max), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
         thislen = __double_decode_array(buf, offset + pos, maxlen - pos, p[element].origin, 3);
@@ -130,14 +176,9 @@ int __virtual_scan_message_t_decode_array(const void *buf, int offset, int maxle
         thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].num_rays), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
-        p[element].ray_endpoints = (int16_t**) lcm_malloc(sizeof(int16_t*) * p[element].num_rays);
-        { int a;
-        for (a = 0; a < p[element].num_rays; a++) {
-            p[element].ray_endpoints[a] = (int16_t*) lcm_malloc(sizeof(int16_t) * 3);
-            thislen = __int16_t_decode_array(buf, offset + pos, maxlen - pos, p[element].ray_endpoints[a], 3);
-            if (thislen < 0) return thislen; else pos += thislen;
-        }
-        }
+        p[element].ray_endpoints = (int16_t*) lcm_malloc(sizeof(int16_t) * p[element].num_rays);
+        thislen = __int16_t_decode_array(buf, offset + pos, maxlen - pos, p[element].ray_endpoints, p[element].num_rays);
+        if (thislen < 0) return thislen; else pos += thislen;
  
     }
     return pos;
@@ -150,18 +191,25 @@ int __virtual_scan_message_t_decode_array_cleanup(virtual_scan_message_t *p, int
  
         __int64_t_decode_array_cleanup(&(p[element].utime), 1);
  
-        __float_decode_array_cleanup(&(p[element].angular_resolution), 1);
+        __float_decode_array_cleanup(&(p[element].elevation_angle_min), 1);
+ 
+        __float_decode_array_cleanup(&(p[element].elevation_angle_max), 1);
+ 
+        __float_decode_array_cleanup(&(p[element].azimuth_angle_min), 1);
+ 
+        __float_decode_array_cleanup(&(p[element].azimuth_angle_max), 1);
+ 
+        __float_decode_array_cleanup(&(p[element].angle_increment), 1);
+ 
+        __int16_t_decode_array_cleanup(&(p[element].range_min), 1);
+ 
+        __int16_t_decode_array_cleanup(&(p[element].range_max), 1);
  
         __double_decode_array_cleanup(p[element].origin, 3);
  
         __int32_t_decode_array_cleanup(&(p[element].num_rays), 1);
  
-        { int a;
-        for (a = 0; a < p[element].num_rays; a++) {
-            __int16_t_decode_array_cleanup(p[element].ray_endpoints[a], 3);
-            if (p[element].ray_endpoints[a]) free(p[element].ray_endpoints[a]);
-        }
-        }
+        __int16_t_decode_array_cleanup(p[element].ray_endpoints, p[element].num_rays);
         if (p[element].ray_endpoints) free(p[element].ray_endpoints);
  
     }
@@ -196,19 +244,26 @@ int __virtual_scan_message_t_clone_array(const virtual_scan_message_t *p, virtua
  
         __int64_t_clone_array(&(p[element].utime), &(q[element].utime), 1);
  
-        __float_clone_array(&(p[element].angular_resolution), &(q[element].angular_resolution), 1);
+        __float_clone_array(&(p[element].elevation_angle_min), &(q[element].elevation_angle_min), 1);
+ 
+        __float_clone_array(&(p[element].elevation_angle_max), &(q[element].elevation_angle_max), 1);
+ 
+        __float_clone_array(&(p[element].azimuth_angle_min), &(q[element].azimuth_angle_min), 1);
+ 
+        __float_clone_array(&(p[element].azimuth_angle_max), &(q[element].azimuth_angle_max), 1);
+ 
+        __float_clone_array(&(p[element].angle_increment), &(q[element].angle_increment), 1);
+ 
+        __int16_t_clone_array(&(p[element].range_min), &(q[element].range_min), 1);
+ 
+        __int16_t_clone_array(&(p[element].range_max), &(q[element].range_max), 1);
  
         __double_clone_array(p[element].origin, q[element].origin, 3);
  
         __int32_t_clone_array(&(p[element].num_rays), &(q[element].num_rays), 1);
  
-        q[element].ray_endpoints = (int16_t**) lcm_malloc(sizeof(int16_t*) * q[element].num_rays);
-        { int a;
-        for (a = 0; a < p[element].num_rays; a++) {
-            q[element].ray_endpoints[a] = (int16_t*) lcm_malloc(sizeof(int16_t) * 3);
-            __int16_t_clone_array(p[element].ray_endpoints[a], q[element].ray_endpoints[a], 3);
-        }
-        }
+        q[element].ray_endpoints = (int16_t*) lcm_malloc(sizeof(int16_t) * q[element].num_rays);
+        __int16_t_clone_array(p[element].ray_endpoints, q[element].ray_endpoints, p[element].num_rays);
  
     }
     return 0;
