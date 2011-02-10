@@ -76,6 +76,7 @@ int baud;                 ///< The serial baud rate
 // Settings
 int systemid = getSystemID();             ///< The unique system id of this MAV, 0-127. Has to be consistent across the system
 int compid = PX_COMP_ID_MAVLINK_BRIDGE_SERIAL;
+int serial_compid = 0;
 string port;              ///< The serial port name, e.g. /dev/ttyUSB0
 bool silent;              ///< Wether console output should be enabled
 bool verbose;             ///< Enable verbose output
@@ -107,7 +108,7 @@ static void mavlink_handler (const lcm_recv_buf_t *rbuf, const char * channel,
 	else
 	{
 		//If msg not from system or not from IMU
-		if (!pc2serial && (msg->sysid != systemid || msg->compid != MAV_COMP_ID_IMU))
+		if (!pc2serial && (msg->sysid != systemid || msg->compid != serial_compid))
 		{
 			// Filter out debug messages
 			//
@@ -502,16 +503,16 @@ int main(int argc, char* argv[])
 
 	config::options_description desc("Allowed options");
 	desc.add_options()
-																											("help", "produce help message")
-																											("sysid,a", config::value<int>(&systemid)->default_value(systemid), "ID of this system, 1-127")
-																											("heartbeat,h", config::bool_switch(&emitHeartbeat)->default_value(false), "send heartbeat signals")
-																											("port,p", config::value<string>(&port)->default_value("/dev/ttyUSB0"), "serial port, e.g. /dev/ttyUSB0")
-																											("baud,b", config::value<int>(&baud)->default_value(115200), "serial baud rate, e.g. 115200")
-																											("silent,s", config::bool_switch(&silent)->default_value(false), "surpress outputs")
-																											("verbose,v", config::bool_switch(&verbose)->default_value(false), "verbose output")
-																											("debug,d", config::bool_switch(&debug)->default_value(false), "Emit debug information")
-																											("pc2serial", config::bool_switch(&pc2serial)->default_value(false), "Send more status information from PC over serial (for second XBee mode)")
-																											;
+		("help", "produce help message")
+		("sysid,a", config::value<int>(&systemid)->default_value(systemid), "ID of this system, 1-127")
+		("compid,c", config::value<int>(&serial_compid)->default_value(MAV_COMP_ID_IMU), "ID of the component connected to the serial port (if non-zero, messages from this compid wont be forwarded back to the serial port)")
+		("port,p", config::value<string>(&port)->default_value("/dev/ttyUSB0"), "serial port, e.g. /dev/ttyUSB0")
+		("baud,b", config::value<int>(&baud)->default_value(115200), "serial baud rate, e.g. 115200")
+		("silent,s", config::bool_switch(&silent)->default_value(false), "surpress outputs")
+		("verbose,v", config::bool_switch(&verbose)->default_value(false), "verbose output")
+		("debug,d", config::bool_switch(&debug)->default_value(false), "Emit debug information")
+		("pc2serial", config::bool_switch(&pc2serial)->default_value(false), "Send more status information from PC over serial (for second XBee mode)")
+		;
 	config::variables_map vm;
 	config::store(config::parse_command_line(argc, argv, desc), vm);
 	config::notify(vm);
