@@ -20,7 +20,15 @@ int64_t __obstacle_map_message_t_hash_recursive(const __lcm_hash_ptr *p)
     const __lcm_hash_ptr cp = { p, (void*)__obstacle_map_message_t_get_hash };
     (void) cp;
  
-    int64_t hash = 0x64024b1fa958fa3eLL
+    int64_t hash = 0xd7e792ab42044963LL
+         + __int8_t_hash_recursive(&cp)
+         + __float_hash_recursive(&cp)
+         + __int32_t_hash_recursive(&cp)
+         + __int32_t_hash_recursive(&cp)
+         + __int32_t_hash_recursive(&cp)
+         + __int32_t_hash_recursive(&cp)
+         + __int32_t_hash_recursive(&cp)
+         + __int32_t_hash_recursive(&cp)
          + __int64_t_hash_recursive(&cp)
          + __int8_t_hash_recursive(&cp)
         ;
@@ -43,6 +51,30 @@ int __obstacle_map_message_t_encode_array(void *buf, int offset, int maxlen, con
     int pos = 0, thislen, element;
  
     for (element = 0; element < elements; element++) {
+ 
+        thislen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].type), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_encode_array(buf, offset + pos, maxlen - pos, &(p[element].resolution), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].num_rows), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].num_cols), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].map_r0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].map_c0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].array_r0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].array_c0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
  
         thislen = __int64_t_encode_array(buf, offset + pos, maxlen - pos, &(p[element].length), 1);
         if (thislen < 0) return thislen; else pos += thislen;
@@ -73,6 +105,22 @@ int __obstacle_map_message_t_encoded_array_size(const obstacle_map_message_t *p,
     int size = 0, element;
     for (element = 0; element < elements; element++) {
  
+        size += __int8_t_encoded_array_size(&(p[element].type), 1);
+ 
+        size += __float_encoded_array_size(&(p[element].resolution), 1);
+ 
+        size += __int32_t_encoded_array_size(&(p[element].num_rows), 1);
+ 
+        size += __int32_t_encoded_array_size(&(p[element].num_cols), 1);
+ 
+        size += __int32_t_encoded_array_size(&(p[element].map_r0), 1);
+ 
+        size += __int32_t_encoded_array_size(&(p[element].map_c0), 1);
+ 
+        size += __int32_t_encoded_array_size(&(p[element].array_r0), 1);
+ 
+        size += __int32_t_encoded_array_size(&(p[element].array_c0), 1);
+ 
         size += __int64_t_encoded_array_size(&(p[element].length), 1);
  
         size += __int8_t_encoded_array_size(p[element].data, p[element].length);
@@ -92,6 +140,30 @@ int __obstacle_map_message_t_decode_array(const void *buf, int offset, int maxle
  
     for (element = 0; element < elements; element++) {
  
+        thislen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].type), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __float_decode_array(buf, offset + pos, maxlen - pos, &(p[element].resolution), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].num_rows), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].num_cols), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].map_r0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].map_c0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].array_r0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
+        thislen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].array_c0), 1);
+        if (thislen < 0) return thislen; else pos += thislen;
+ 
         thislen = __int64_t_decode_array(buf, offset + pos, maxlen - pos, &(p[element].length), 1);
         if (thislen < 0) return thislen; else pos += thislen;
  
@@ -107,6 +179,22 @@ int __obstacle_map_message_t_decode_array_cleanup(obstacle_map_message_t *p, int
 {
     int element;
     for (element = 0; element < elements; element++) {
+ 
+        __int8_t_decode_array_cleanup(&(p[element].type), 1);
+ 
+        __float_decode_array_cleanup(&(p[element].resolution), 1);
+ 
+        __int32_t_decode_array_cleanup(&(p[element].num_rows), 1);
+ 
+        __int32_t_decode_array_cleanup(&(p[element].num_cols), 1);
+ 
+        __int32_t_decode_array_cleanup(&(p[element].map_r0), 1);
+ 
+        __int32_t_decode_array_cleanup(&(p[element].map_c0), 1);
+ 
+        __int32_t_decode_array_cleanup(&(p[element].array_r0), 1);
+ 
+        __int32_t_decode_array_cleanup(&(p[element].array_c0), 1);
  
         __int64_t_decode_array_cleanup(&(p[element].length), 1);
  
@@ -142,6 +230,22 @@ int __obstacle_map_message_t_clone_array(const obstacle_map_message_t *p, obstac
 {
     int element;
     for (element = 0; element < elements; element++) {
+ 
+        __int8_t_clone_array(&(p[element].type), &(q[element].type), 1);
+ 
+        __float_clone_array(&(p[element].resolution), &(q[element].resolution), 1);
+ 
+        __int32_t_clone_array(&(p[element].num_rows), &(q[element].num_rows), 1);
+ 
+        __int32_t_clone_array(&(p[element].num_cols), &(q[element].num_cols), 1);
+ 
+        __int32_t_clone_array(&(p[element].map_r0), &(q[element].map_r0), 1);
+ 
+        __int32_t_clone_array(&(p[element].map_c0), &(q[element].map_c0), 1);
+ 
+        __int32_t_clone_array(&(p[element].array_r0), &(q[element].array_r0), 1);
+ 
+        __int32_t_clone_array(&(p[element].array_c0), &(q[element].array_c0), 1);
  
         __int64_t_clone_array(&(p[element].length), &(q[element].length), 1);
  

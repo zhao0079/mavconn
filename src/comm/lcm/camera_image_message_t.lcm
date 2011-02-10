@@ -1,0 +1,12 @@
+struct camera_image_message_t
+{
+    int64_t utime;
+
+    string camera_name;
+    float camera_params[4];
+
+    int64_t jpeg_size;
+    int8_t jpeg_image_data[jpeg_size];
+
+    double camera_pose[6];
+}

@@ -9,11 +9,11 @@ INCLUDE_DIRECTORIES(.
 
 SET_SOURCE_FILES(LCMEXT_SRC_FILES
   mavlink_message_t.c
+  camera_image_message_t.c
   gl_overlay_message_t.c
   obstacle_map_message_t.c
   point_cloud_message_t.c
-  texture_facet_t.c
-  texture_map_message_t.c
+  virtual_scan_message_t.c
 )
 PIXHAWK_LIBRARY(mavconn_lcm SHARED ${LCMEXT_SRC_FILES})
 SET_TARGET_PROPERTIES(mavconn_lcm PROPERTIES COMPILE_FLAGS "-D_REENTRANT -Wno-pointer-sign")

@@ -206,6 +206,31 @@ public:
 		}
 	}
 
+	bool getGPS(const mavlink_message_t *msg, float *lat, float *lon, float *alt)
+	{
+		// Decode message
+		if (msg->msgid != MAVLINK_MSG_ID_IMAGE_AVAILABLE)
+		{
+			// Instantly return if MAVLink message did not contain an image
+			return false;
+		}
+		else
+		{
+			// Extract the image meta information and pointer location from the image
+			mavlink_image_available_t img;
+			mavlink_msg_image_available_decode(msg, &img);
+
+			if (lat)
+				*lat = img.lat;
+			if (lon)
+				*lon = img.lon;
+			if (alt)
+				*alt = img.alt;
+
+			return true;
+		}
+	}
+
 	bool sharedMemCopyImage(const mavlink_message_t* msg, cv::Mat& img)
 	{
 		IplImage iplImg = img;  // only header created, no data copied
@@ -338,7 +363,7 @@ public:
 		}
 	}
 
-	bool sharedMemCopyKinectImage(const mavlink_message_t* msg, IplImage* colorFrame, IplImage* depthFrame)
+	bool sharedMemCopyKinectImage(const mavlink_message_t* msg, IplImage* bayerFrame, IplImage* depthFrame)
 	{
 		// Decode message
 		if (msg->msgid != MAVLINK_MSG_ID_IMAGE_AVAILABLE)
@@ -356,14 +381,14 @@ public:
 				return false;
 
 			int cam = (int)img.cam_no;
-			int colorsize = img.width * img.height * 3; // IPL_DEPTH_8U, 3 channels
+			int bayersize = img.width * img.height; // IPL_DEPTH_8U, 1 channel
 			int depthsize = img.width * img.height * 2; // IPL_DEPTH_16U, 1 channel
 
 			// Check if shared memory for this camera is already attached
-			if (shms[cam] == NULL || shm_sizes[cam] != (colorsize + depthsize))
+			if (shms[cam] == NULL || shm_sizes[cam] != (bayersize + depthsize))
 			{
 				//attachSharedMem((int)img.key, size, &shm);
-				shm_sizes[cam] = colorsize + depthsize;
+				shm_sizes[cam] = bayersize + depthsize;
 			}
 
 			shms[cam] = shm;
@@ -385,8 +410,8 @@ public:
 			}
 
 			// Copy message into IPLImage
-			memcpy(colorFrame->imageData, ptr, colorsize);
-			memcpy(depthFrame->imageData, ptr+colorsize, depthsize);
+			memcpy(bayerFrame->imageData, ptr, bayersize);
+			memcpy(depthFrame->imageData, ptr+bayersize, depthsize);
 
 			shmdt(ptr);
 			return true;
