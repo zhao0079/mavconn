@@ -44,7 +44,6 @@ This file is part of the MAVCONN project
 #include <boost/filesystem.hpp>
 // OpenCV includes
 #include <cv.h>
-#include <cvtypes.h>
 #include <highgui.h>
 
 // Latency Benchmarking

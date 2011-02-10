@@ -17,7 +17,7 @@ FIND_PATH(CV_INCLUDE_DIR cv.h
   PATHS ${OpenCV_IncludeSearchPaths}
 )
 FIND_LIBRARY(CV_LIBRARY_OPTIMIZED
-  NAMES cv
+  NAMES cv opencv_imgproc
   PATHS ${OpenCV_LibrarySearchPaths}
 )
 
@@ -25,7 +25,7 @@ FIND_PATH(CVAUX_INCLUDE_DIR cvaux.h
   PATHS ${OpenCV_IncludeSearchPaths}
 )
 FIND_LIBRARY(CVAUX_LIBRARY_OPTIMIZED
-  NAMES cvaux
+  NAMES cvaux opencv_contrib
   PATHS ${OpenCV_LibrarySearchPaths}
 )
 
@@ -33,7 +33,7 @@ FIND_PATH(CXCORE_INCLUDE_DIR cxcore.h
   PATHS ${OpenCV_IncludeSearchPaths}
 )
 FIND_LIBRARY(CXCORE_LIBRARY_OPTIMIZED
-  NAMES cxcore
+  NAMES cxcore opencv_core
   PATHS ${OpenCV_LibrarySearchPaths}
 )
 
@@ -41,7 +41,7 @@ FIND_PATH(ML_INCLUDE_DIR ml.h
   PATHS ${OpenCV_IncludeSearchPaths}
 )
 FIND_LIBRARY(ML_LIBRARY_OPTIMIZED
-  NAMES ml
+  NAMES ml opencv_ml
   PATHS ${OpenCV_LibrarySearchPaths}
 )
 
@@ -49,7 +49,7 @@ FIND_PATH(HIGHGUI_INCLUDE_DIR highgui.h
   PATHS ${OpenCV_IncludeSearchPaths}
 )
 FIND_LIBRARY(HIGHGUI_LIBRARY_OPTIMIZED
-  NAMES highgui
+  NAMES highgui opencv_highgui
   PATHS ${OpenCV_LibrarySearchPaths}
 )
 

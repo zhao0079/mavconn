@@ -16,6 +16,8 @@ ENDIF(GPS_FOUND)
 PIXHAWK_EXECUTABLE(px_ping px_ping.cc)
 PIXHAWK_LINK_LIBRARIES(px_ping
   mavconn_lcm
+  ${GLIB2_LIBRARY}
+  ${GTHREAD2_LIBRARY}
 )
 
 PIXHAWK_EXECUTABLE(px_mavlink_bridge_serial px_mavlinkserial.cc)

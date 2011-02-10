@@ -8,8 +8,7 @@
 #ifndef PxSharedMemServer_H_
 #define PxSharedMemServer_H_
 
-#include <cvtypes.h>
-#include <cv.h>
+#include <cv.hpp>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
