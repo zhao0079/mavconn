@@ -1,3 +1,5 @@
 debug*eclipse
 release*eclipse
 build
+debug
+release
